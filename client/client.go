@@ -11,15 +11,15 @@ func listenToUser(conn net.Conn) {
 	for {
 		// read in input from stdin
 		reader := bufio.NewReader(os.Stdin)
-		fmt.Print("Text to send: \n")
+		//fmt.Print("\n>")
 		text, err := reader.ReadString('\n')
 		if err != nil {
 			panic(err)
 		}
-		log.Println("read the message from user.")
+		log.Println("read the message from user : "+text)
 
 		// send to socket
-		log.Println("sending . . .")
+		log.Println("sending : "+text)
 		fmt.Fprintf(conn, text+"\n")
 	}
 }
@@ -27,15 +27,15 @@ func listenToUser(conn net.Conn) {
 func main() {
 
 	//-------------- terminal setups ------------
-	color.Set(color.BgBlue)
+	//color.Set(color.BgBlue)
 
 	//--------------- log setup ------------------
-	f, err := os.OpenFile("logs", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	f, err := os.OpenFile("client_logs", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 	    fmt.Printf("error opening file: %v",err)
 	}
 	defer func(){
-		color.Set(color.FgWhite)
+		//color.Set(color.FgWhite)
 		f.Close()
 	}()
 
@@ -47,7 +47,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("connected to the server.")
+	log.Println("connected to the server : ")
 
 	go listenToUser(conn)
 
@@ -58,8 +58,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		log.Println("message received.")
+		log.Println("message received : "+message)
 
-		color.Red("server said : " + message)
+		color.Green("\n" + message+"\n")
 	}
 }
