@@ -14,13 +14,13 @@ type Client struct {
 	conn    net.Conn
 }
 
-func sendMessage(conn net.Conn, client Client){
-	_, _ = conn.Write([]byte(client.message))
-	// if sdf != nil {
-	// 	fmt.Println("hello")
-	// }
+// func sendMessage(conn net.Conn, client Client){
+	// _, err = conn.Write([]byte(client.message))
+	 // if err != nil {
+	 	// fmt.Println("hello")
+	 // }
 
-}
+// }
 
 func handleMessage(client chan Client) {
 	for {
@@ -32,8 +32,9 @@ func handleMessage(client chan Client) {
 
 		// Send back the response.
 		//a := "hello"
-		go client.conn.Write([]byte(client.message))
+		//go client.conn.Write([]byte(client.message))
 		//go sendMessage(client.conn, client)
+		go fmt.Fprintf(client.conn, "OKAY . . ."+"\n")
 		//go client.conn.Write([]byte(a))
 	}
 }
