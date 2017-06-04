@@ -165,3 +165,418 @@
 
 2017/05/31 14:33:06 message received : OKAY . . .
 
+2017/06/02 18:47:06 connected to the server : 
+2017/06/02 18:47:24 read the message from user : ~&#login#&~
+
+2017/06/02 18:47:24 sending : ~&#login#&~
+
+2017/06/02 18:47:24 message received : logged in 
+
+2017/06/02 18:47:36 read the message from user : ~&#signup#&~
+
+2017/06/02 18:47:36 sending : ~&#signup#&~
+
+2017/06/02 18:47:36 message received : signing you up
+
+2017/06/02 18:47:45 read the message from user : ~&#getclients#&~
+
+2017/06/02 18:47:45 sending : ~&#getclients#&~
+
+2017/06/02 18:47:45 message received : here are your clients
+
+2017/06/02 18:47:47 read the message from user : 
+
+2017/06/02 18:47:47 sending : 
+
+2017/06/02 18:47:47 message received : OKAY . . .
+
+2017/06/02 18:47:48 read the message from user : 
+
+2017/06/02 18:47:48 sending : 
+
+2017/06/02 18:47:48 message received : OKAY . . .
+
+2017/06/02 18:47:49 read the message from user : dasd
+
+2017/06/02 18:47:49 sending : dasd
+
+2017/06/02 18:47:49 message received : OKAY . . .
+
+2017/06/02 19:50:30 connected to the server : 
+2017/06/02 20:06:37 connected to the server : 
+2017/06/02 20:06:37 message received : Connection successful
+
+2017/06/02 20:07:00 read the message from user : hello
+
+2017/06/02 20:07:00 sending : hello
+
+2017/06/02 20:07:00 message received : OKAY . . .
+
+2017/06/02 20:07:03 read the message from user : lkdfj
+
+2017/06/02 20:07:03 sending : lkdfj
+
+2017/06/02 20:07:03 message received : OKAY . . .
+
+2017/06/02 20:08:14 connected to the server : 
+2017/06/02 20:08:14 message received : Connection successful
+
+2017/06/02 20:08:16 read the message from user : hello
+
+2017/06/02 20:08:16 sending : hello
+
+2017/06/02 20:08:16 message received : OKAY . . .
+
+2017/06/02 20:08:17 read the message from user : 
+
+2017/06/02 20:08:17 sending : 
+
+2017/06/02 20:08:17 message received : OKAY . . .
+
+2017/06/02 20:08:19 read the message from user : asdfg
+
+2017/06/02 20:08:19 sending : asdfg
+
+2017/06/02 20:08:19 message received : OKAY . . .
+
+2017/06/02 20:08:20 read the message from user : 
+
+2017/06/02 20:08:20 sending : 
+
+2017/06/02 20:08:20 message received : OKAY . . .
+
+2017/06/02 20:12:13 connected to the server : 
+2017/06/02 20:12:13 message received : Connection successful
+
+2017/06/02 20:12:15 read the message from user : sasss
+
+2017/06/02 20:12:15 sending : sasss
+
+2017/06/02 20:12:15 message received : OKAY . . .
+
+2017/06/02 20:12:17 read the message from user : 
+
+2017/06/02 20:13:27 read the message from user :      
+
+2017/06/02 20:13:30 read the message from user :      d
+
+2017/06/02 20:13:30 sending :      d
+
+2017/06/02 20:13:30 message received : OKAY . . .
+
+2017/06/02 20:14:24 connected to the server : 
+2017/06/02 20:14:24 message received : Connection successful
+
+2017/06/02 20:14:26 read the message from user : dsd
+
+2017/06/02 20:14:26 sending : dsd
+
+2017/06/02 20:14:26 message received : OKAY . . .
+
+2017/06/02 20:14:27 read the message from user : 
+
+2017/06/02 20:14:30 read the message from user : asdf
+
+2017/06/02 20:14:30 sending : asdf
+
+2017/06/02 20:14:30 message received : OKAY . . .
+
+2017/06/02 20:15:35 connected to the server : 
+2017/06/02 20:15:35 message received : Connection successful
+
+2017/06/02 20:15:41 read the message from user : dsds
+
+2017/06/02 20:15:41 sending : dsds
+
+2017/06/02 20:15:41 message received : OKAY . . .
+
+2017/06/02 20:15:43 read the message from user : qwew
+
+2017/06/02 20:15:43 sending : qwew
+
+2017/06/02 20:15:43 message received : OKAY . . .
+
+2017/06/02 20:15:45 read the message from user :     
+
+2017/06/02 20:18:32 connected to the server : 
+2017/06/02 20:18:32 message received : Connection successful
+
+2017/06/02 20:18:35 read the message from user : hello
+
+2017/06/02 20:18:35 sending : hello
+
+2017/06/02 20:18:35 message received : OKAY . . .
+
+2017/06/02 20:18:39 read the message from user : asdfg
+
+2017/06/02 20:18:39 sending : asdfg
+
+2017/06/02 20:18:39 message received : OKAY . . .
+
+2017/06/02 20:18:41 read the message from user : kls;dlf
+
+2017/06/02 20:18:41 sending : kls;dlf
+
+2017/06/02 20:18:41 message received : OKAY . . .
+
+2017/06/02 20:18:42 read the message from user : jgjklakd
+
+2017/06/02 20:18:42 sending : jgjklakd
+
+2017/06/02 20:18:42 message received : OKAY . . .
+
+2017/06/02 20:18:44 read the message from user : ajdfskds
+
+2017/06/02 20:18:44 sending : ajdfskds
+
+2017/06/02 20:18:44 message received : OKAY . . .
+
+2017/06/02 20:18:45 read the message from user : ajdksflsdf
+
+2017/06/02 20:18:45 sending : ajdksflsdf
+
+2017/06/02 20:18:45 message received : OKAY . . .
+
+2017/06/02 20:24:01 connected to the server : 
+2017/06/02 20:24:01 message received : Connection successful
+
+2017/06/02 20:24:06 read the message from user : ~kfdl
+
+2017/06/02 20:24:06 sending : ~kfdl
+
+2017/06/02 20:24:06 message received : OKAY . . .
+
+2017/06/02 20:38:42 connected to the server : 
+2017/06/02 20:38:42 message received : Connection successful
+
+2017/06/02 20:39:37 connected to the server : 
+2017/06/02 20:40:02 read the message from user : dasd
+
+2017/06/02 20:40:02 sending : dasd
+
+2017/06/02 20:40:04 read the message from user : ~
+
+2017/06/02 20:40:04 sending : ~
+
+2017/06/02 20:40:05 read the message from user : 
+
+2017/06/02 20:40:07 read the message from user : asdf
+
+2017/06/02 20:40:07 sending : asdf
+
+2017/06/02 20:40:09 read the message from user : 2
+
+2017/06/02 20:40:09 sending : 2
+
+2017/06/02 20:40:10 read the message from user : 12
+
+2017/06/02 20:40:10 sending : 12
+
+2017/06/02 20:40:11 read the message from user : eqweqw
+
+2017/06/02 20:40:11 sending : eqweqw
+
+2017/06/02 20:40:12 read the message from user : ~
+
+2017/06/02 20:40:12 sending : ~
+
+2017/06/02 20:40:12 read the message from user : 
+
+2017/06/02 20:40:52 connected to the server : 
+2017/06/02 20:40:54 read the message from user : asdf
+
+2017/06/02 20:40:54 sending : asdf
+
+2017/06/02 20:40:55 read the message from user : fdsa
+
+2017/06/02 20:40:55 sending : fdsa
+
+2017/06/02 20:40:58 read the message from user : ~dasd
+
+2017/06/02 20:40:58 sending : ~dasd
+
+2017/06/02 20:40:59 read the message from user : asdf
+
+2017/06/02 20:40:59 sending : asdf
+
+2017/06/02 20:41:02 read the message from user : fasd
+
+2017/06/02 20:41:02 sending : fasd
+
+2017/06/02 20:41:05 read the message from user : ~dass
+
+2017/06/02 20:41:05 sending : ~dass
+
+2017/06/02 20:42:33 connected to the server : 
+2017/06/02 20:42:42 read the message from user : 1
+
+2017/06/02 20:42:42 sending : 1
+
+2017/06/02 20:54:48 connected to the server : 
+2017/06/02 20:54:52 read the message from user : 3
+
+2017/06/02 20:55:00 read the message from user : 3123
+
+2017/06/02 20:55:01 read the message from user : 1
+
+2017/06/02 20:55:39 connected to the server : 
+2017/06/02 20:55:48 read the message from user : 1
+
+2017/06/02 20:56:27 connected to the server : 
+2017/06/02 20:56:28 read the message from user : 1
+
+2017/06/02 21:02:04 connected to the server : 
+2017/06/02 21:02:08 read the message from user : 1
+
+2017/06/02 21:02:17 read the message from user : 2
+
+2017/06/02 21:03:07 connected to the server : 
+2017/06/02 21:03:08 read the message from user : 1
+
+2017/06/02 21:03:11 read the message from user : 3
+
+2017/06/02 21:03:12 read the message from user : 2
+
+2017/06/02 21:03:12 read the message from user : 3
+
+2017/06/02 21:05:44 connected to the server : 
+2017/06/02 21:05:45 read the message from user : 1
+
+2017/06/02 21:07:55 connected to the server : 
+2017/06/02 21:07:55 read the message from user : 2
+
+2017/06/02 21:08:10 connected to the server : 
+2017/06/02 21:08:10 read the message from user : 1
+
+2017/06/02 22:04:46 connected to the server : 
+2017/06/02 22:08:30 connected to the server : 
+2017/06/02 22:08:32 message received : Connection successful
+
+2017/06/02 22:08:49 connected to the server : 
+2017/06/02 22:08:51 message received : Connection successful
+
+2017/06/02 22:08:51 read the message from user : 
+
+2017/06/03 10:33:25 connected to the server : 
+2017/06/03 10:33:30 message received : Connection successful
+
+2017/06/03 10:33:30 read the message from user : 
+
+2017/06/03 10:33:30 message received : signing you up
+
+2017/06/03 10:35:09 connected to the server : 
+2017/06/03 10:35:11 message received : Connection successful
+
+2017/06/03 10:35:11 read the message from user : 
+
+2017/06/03 10:35:11 message received : signing you up
+
+2017/06/03 10:36:26 connected to the server : 
+2017/06/03 10:36:28 message received : Connection successful
+
+2017/06/03 10:36:28 message received : signing you up
+
+2017/06/03 10:36:28 read the message from user : 
+
+2017/06/03 10:36:35 read the message from user : ^
+
+2017/06/03 10:36:42 message received : signing you up
+
+2017/06/03 10:36:42 read the message from user : 
+
+2017/06/03 10:41:29 connected to the server : 
+2017/06/03 10:44:10 connected to the server : 
+2017/06/03 10:44:12 message received : Connection successful
+
+2017/06/03 10:44:12 read the message from user : 
+
+2017/06/03 10:44:12 message received : signing you up
+
+2017/06/03 10:52:49 connected to the server : 
+2017/06/03 10:52:52 message received : Connection successful
+
+2017/06/03 10:52:52 message received : signing you up
+
+2017/06/03 10:54:59 connected to the server : 
+2017/06/03 10:55:01 message received : Connection successful
+
+2017/06/03 10:55:01 message received : signing you up
+
+2017/06/03 10:56:31 connected to the server : 
+2017/06/03 10:56:32 message received : Connection successful
+
+2017/06/03 10:56:32 message received : signing you up
+
+2017/06/03 11:09:48 connected to the server : 
+2017/06/03 11:09:53 message received : Connection successful
+
+2017/06/03 11:09:53 message received : ~&#signupsuccess#&~
+
+2017/06/03 11:10:23 connected to the server : 
+2017/06/03 11:10:25 message received : Connection successful
+
+2017/06/03 11:10:25 message received : ~&#signupfailure#&~
+
+2017/06/03 11:11:02 connected to the server : 
+2017/06/03 11:11:03 message received : Connection successful
+
+2017/06/03 11:11:03 message received : ~&#signupfailure#&~
+
+2017/06/03 11:15:04 connected to the server : 
+2017/06/03 11:15:06 message received : Connection successful
+
+2017/06/03 11:15:06 message received : ~&#signupfailure#&~
+
+2017/06/03 11:16:13 connected to the server : 
+2017/06/03 11:16:15 message received : Connection successful
+
+2017/06/03 11:16:15 message received : ~&#signupfailure#&~
+
+2017/06/03 11:16:31 connected to the server : 
+2017/06/03 11:16:32 message received : Connection successful
+
+2017/06/03 11:16:32 message received : ~&#signupfailure#&~
+
+2017/06/03 11:17:54 connected to the server : 
+2017/06/03 11:17:56 message received : Connection successful
+
+2017/06/03 11:17:56 message received : ~&#signupfailure#&~
+
+2017/06/03 11:19:37 connected to the server : 
+2017/06/03 11:19:38 read the message from user : 
+
+2017/06/03 11:19:38 message received : Connection successful
+
+2017/06/03 11:21:04 connected to the server : 
+2017/06/03 11:21:07 read the message from user : 
+
+2017/06/03 11:21:07 message received : Connection successful
+
+2017/06/03 11:23:42 connected to the server : 
+2017/06/03 11:25:18 connected to the server : 
+2017/06/03 11:26:45 connected to the server : 
+2017/06/03 11:26:48 message received : Connection successful
+
+2017/06/03 11:31:18 connected to the server : 
+2017/06/03 11:31:19 message received : Connection successful
+
+2017/06/03 11:33:28 connected to the server : 
+2017/06/03 11:33:31 message received : Connection successful
+
+2017/06/03 11:36:09 connected to the server : 
+2017/06/03 11:36:09 message received : Connection successful
+
+2017/06/03 11:38:23 connected to the server : 
+2017/06/03 11:38:23 message received : Connection successful
+
+2017/06/03 11:38:57 connected to the server : 
+2017/06/03 11:38:57 message received : Connection successful
+
+2017/06/03 11:41:45 connected to the server : 
+2017/06/03 11:44:55 connected to the server : 
+2017/06/03 11:45:57 connected to the server : 
+2017/06/03 11:46:41 connected to the server : 
+2017/06/03 11:47:14 connected to the server : 
+2017/06/04 09:37:24 connected to the server : 
+2017/06/04 09:42:54 connected to the server : 
+2017/06/04 11:57:39 connected to the server : 
