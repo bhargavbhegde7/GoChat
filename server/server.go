@@ -27,12 +27,12 @@ type Request struct {
 	Pubkey string `json:"pubkey"`
 }
 
-const GET_CLIENTS 	= "~&#get_clients#&~"
-const LOGIN 				= "~&#login#&~"
-const SIGNUP 				= "~&#login#&~"
+const GET_CLIENTS   = "~&#get_clients#&~"
+const LOGIN 	    = "~&#login#&~"
+const SIGNUP 	    = "~&#signup#&~"
 const SELECT_TARGET = "~&#selectTarget#&~"
-const TARGET_FAIL 	= "~&#targetFail#&~"
-const TARGET_SET 		= "~&#targetset#&~"
+const TARGET_FAIL   = "~&#targetFail#&~"
+const TARGET_SET    = "~&#targetset#&~"
 
 var clientsList []Client
 
@@ -68,7 +68,7 @@ func handleRequest(client Client){
 			if err != nil{
 				go fmt.Fprintf(client.conn, TARGET_FAIL+"\n")
 			}else{
-				go fmt.Fprintf(client.conn, TERGET_SET+"\n")
+				go fmt.Fprintf(client.conn, TARGET_SET+"\n")
 				//plus attach the public key to the json
 			}
 
