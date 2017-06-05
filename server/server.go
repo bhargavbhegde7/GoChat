@@ -27,12 +27,15 @@ type Request struct {
 	Pubkey string `json:"pubkey"`
 }
 
-const GET_CLIENTS   = "~&#get_clients#&~"
-const LOGIN 	    = "~&#login#&~"
-const SIGNUP 	    = "~&#signup#&~"
-const SELECT_TARGET = "~&#selectTarget#&~"
-const TARGET_FAIL   = "~&#targetFail#&~"
-const TARGET_SET    = "~&#targetset#&~"
+const GET_CLIENTS   	= "~&#get_clients#&~"
+const LOGIN 	    	= "~&#login#&~"
+const SIGNUP 	    	= "~&#signup#&~"
+const SELECT_TARGET 	= "~&#selectTarget#&~"
+const TARGET_FAIL   	= "~&#targetFail#&~"
+const TARGET_SET    	= "~&#targetset#&~"
+const SIGNUP_FAILURE    = "~&#signupfailure#&~"
+const SIGNUP_SUCCESSFUL = "~&#signupsuccess#&~"
+const ERROR    		= "~&#error#&~"
 
 var clientsList []Client
 
@@ -55,16 +58,16 @@ func handleRequest(client Client){
 
 		break
 	case SIGNUP:
-			err := signup(client)
+			err := signup(client, request.Username)
 			if err != nil{
-				go fmt.Fprintf(client.conn, "~&#signupfailure#&~"+"\n")
+				go fmt.Fprintf(client.conn, SIGNUP_FAILURE+"\n")
 			}else{
-				go fmt.Fprintf(client.conn, "~&#signupsuccess#&~"+"\n")
+				go fmt.Fprintf(client.conn, ERROR+" : "+SIGNUP_SUCCESSFUL+"\n")
 			}
 
 		break
 	case SELECT_TARGET:
-			err := setTarget(client, "goodbytes")
+			err := setTarget(client, request.Username)
 			if err != nil{
 				go fmt.Fprintf(client.conn, TARGET_FAIL+"\n")
 			}else{
@@ -85,10 +88,6 @@ func setTarget(client Client, username string) error{
 	return nil
 }
 
-func getUsername(message string) string{
-	return "bhegde"
-}
-
 func userExists(username string) bool{
 	for _, client := range clientsList {
 	    if username == client.username{
@@ -98,14 +97,14 @@ func userExists(username string) bool{
 	return false
 }
 
-func signup(client Client) error{
+func signup(client Client, username string) error{
 	//check for existing username and
 	//send either ~&#signupsuccess#&~
 	//or ~&#error#&~ + ~&#signupfailure#&~
-	if userExists(getUsername(client.message)) {
+	if userExists(username) {
 		return errors.New("user exists")
 	}else{
-		client.username = client.message
+		client.username = username
 		clientsList = append(clientsList, client)
 	}
 	return nil

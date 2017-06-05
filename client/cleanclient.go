@@ -119,7 +119,7 @@ func parseOption(option int, conn net.Conn){
       startListeningToUser(conn)
       break
     default:
-      fmt.Println(". . .")
+      fmt.Println("no match found")
       break
   }
 }
