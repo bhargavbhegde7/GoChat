@@ -1,0 +1,7 @@
+make a common library for both client and server
+
+keep a thread open for server messages all the time
+put the messages into appropreate channels based on tags
+keep separate threads listening and waiting on those channels and let them take care of the stuff put in
+
+send responses by constructing a response structure and then converting it to json string

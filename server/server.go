@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"os"
 	"log"
@@ -28,20 +29,18 @@ type Request struct {
 	Message string `json:"message"`
 }
 
-const PREFIX 			= "~&#"
-const SUFFIX			= "#&~"
-const GET_CLIENTS   	= PREFIX + "get_clients" + SUFFIX
-const LOGIN 	    	= PREFIX + "login" + SUFFIX
-const SIGNUP 	    	= PREFIX + "signup" + SUFFIX
-const SELECT_TARGET 	= PREFIX + "selectTarget" + SUFFIX
-const TARGET_FAIL   	= PREFIX + "targetFail" + SUFFIX
-const TARGET_SET    	= PREFIX + "targetset" + SUFFIX
-const SIGNUP_FAILURE    = PREFIX + "signupfailure" + SUFFIX
-const SIGNUP_SUCCESSFUL = PREFIX + "signupsuccess" + SUFFIX
-const ERROR    			= PREFIX + "error" + SUFFIX
-
 var clientsList []Client
 //var clientsList = make(map[string]Client)
+
+func sendResponse(conn net.Conn, tag string, message string){
+	user := &common.Response{ResTag: tag, Message: message}
+	response, err := json.Marshal(user)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprintf(conn, string(response)+"\n")
+}
 
 func requestHandler(client Client){
 
@@ -49,39 +48,39 @@ func requestHandler(client Client){
 	json.Unmarshal([]byte(client.message), &request)
 
 	switch request.Reqtag {
-	case GET_CLIENTS:
+	case common.GET_CLIENTS:
 			clients := ""
 			for _, client := range clientsList {
 			    clients = clients+" : "+client.username
 			}
-			go fmt.Fprintf(client.conn, clients+"\n")
+			go sendResponse(client.conn, common.CLIENTS_LIST, clients)
 
 		break
-	case LOGIN:
-			go fmt.Fprintf(client.conn, "logged in "+"\n")
+	case common.LOGIN:
+			go sendResponse(client.conn, common.LOGIN_SUCCESS, common.NONE)
 
 		break
-	case SIGNUP:
+	case common.SIGNUP:
 			err := signup(client, request.Username)
 			if err != nil{
-				go fmt.Fprintf(client.conn, SIGNUP_FAILURE+"\n")
+				go sendResponse(client.conn, common.SIGNUP_FAILURE, common.NONE)
 			}else{
-				go fmt.Fprintf(client.conn, ERROR+" : "+SIGNUP_SUCCESSFUL+"\n")
+				go sendResponse(client.conn, common.SIGNUP_SUCCESSFUL, common.NONE)
 			}
 
 		break
-	case SELECT_TARGET:
+	case common.SELECT_TARGET:
 			err := setTarget(client, request.Username)
 			if err != nil{
-				go fmt.Fprintf(client.conn, TARGET_FAIL+"\n")
+				go sendResponse(client.conn, common.TARGET_FAIL, common.NONE)
 			}else{
-				go fmt.Fprintf(client.conn, TARGET_SET+"\n")
+				go sendResponse(client.conn, common.TARGET_SET, common.NONE)
 				//plus attach the public key to the json
 			}
 
 		break
 		default:
-			go fmt.Fprintf(client.conn, "OKAY . . ."+"\n")
+			go sendResponse(client.conn, common.NONE, common.NONE)
 
 		break
 	}

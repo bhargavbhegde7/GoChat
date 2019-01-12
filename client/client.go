@@ -1,176 +1,206 @@
 package main
-//
-//import "net"
-//import "fmt"
-//import "bufio"
-//import "os"
-//import "log"
-//import "github.com/fatih/color"
-//import "strings"
-////import "errors"
-//
-//func isControlMsg(msg string) bool{
-//	if string(msg[0]) == "^"{
-//		return true
-//	}else{
-//		return false
-//	}
-//}
-//
-//func handleInput(text string, conn net.Conn){
-//
-//	if isControlMsg(text){
-//		fmt.Println("\n control message found\n")
-//
-//		//take some more data and stuff.....
-//
-//		//reconfig
-//	}else{
-//		fmt.Println("\ndata message found\n")
-//
-//		//send to the target client
-//
-//		log.Println("sending : "+text)
-//		fmt.Fprintf(conn, text+"\n")
-//	}
-//}
-//
-//func listenToUser(conn net.Conn) {
-//	for {
-//
-//		reader := bufio.NewReader(os.Stdin)
-//		text, err := reader.ReadString('\n')
-//		if err != nil {
-//			panic(err)
-//		}
-//		log.Println("read the message from user : "+text)
-//
-//		if strings.TrimSpace(text) != ""{
-//			handleInput(text, conn)
-//		}else{
-//			color.Red("\nerror in the text\n\n")
-//		}
-//	}//infinite for loop ends
-//}
-//
-//func login(){
-//
-//}
-//
-//func signup(conn net.Conn){
-//
-//
-//	//jsonString := "{'type' : '~&#signup#&~','username' : '"+username+"','pubkey' : 'abcdef'}"
-//	//fmt.Fprintf(conn, jsonString+"\n")
-//}
-//
-//func config(conn net.Conn){
-//	for {
-//		color.Yellow("\ninstructions and options")
-//		fmt.Println("1. login")
-//		fmt.Println("2. sign up")
-//		fmt.Println("ctrl+c to exit")
-//
-//		var option int
-//    _, err := fmt.Scanf("%d", &option)
-//		if err != nil {
-//			panic(err)
-//			color.Red("select an option")
-//		}else{
-//			if option == 1{
-//				color.Yellow("\nlogging you in\n")
-//				login()
-//				break
-//			}else if option == 2{
-//				color.Yellow("\ncalling signup\n")
-//				//signup(conn)
-//				fmt.Print("Enter text: ")
-//			  var input string
-//			  fmt.Scanln(&input)
-//			  fmt.Print(input)
-//				//break
-//			}else{
-//				color.Red("\nselect an option\n")
-//			}
-//		}
-//	}//infinite for loop ends
-//
-//	//return errors.New("error in config")
-//	//return nil
-//}
-//
-//func isError(msg string) bool{
-//	if strings.Contains(msg, "~&#error#&~"){
-//		return true
-//	}else{
-//		return false
-//	}
-//}
-//
-//func handleServerMessage(chanMsg chan string){
-//	for {
-//		// Wait for the next server message to come off the queue.
-//		message := <-chanMsg
-//
-//		if isError(message) {
-//			color.Green("\n" + message+"\n")
-//		}else if strings.Contains(message, "~&#clients#&~") {
-//			color.Green("\n" + "got all the cliends details"+"\n")
-//		}else if strings.Contains(message, "~&#target_disconnected#&~") {
-//			color.Green("\n" + "remote client disconnected"+"\n")
-//		}else if strings.Contains(message, "~&#signupsuccess#&~") {
-//			color.Green("\n" + "sign up successful"+"\n")
-//		}else if strings.Contains(message, "~&#signupfailure#&~") {
-//			color.Green("\n" + "sign up failed"+"\n")
-//		}else{
-//			color.Green("\n" + message+"\n")
-//		}
-//	}
-//}
-//
-//func main() {
-//
-//	//--------------- log setup ------------------
-//	f, err := os.OpenFile("client_logs", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
-//	if err != nil {
-//	    fmt.Printf("error opening file: %v",err)
-//	}
-//	defer func(){
-//		//color.Set(color.FgWhite)
-//		f.Close()
-//	}()
-//
-//	log.SetOutput(f)
-//	//--------------- log setup ------------------
-//
-//	// connect to this socket
-//	conn, err := net.Dial("tcp", "127.0.0.1:8080")
-//	if err != nil {
-//		panic(err)
-//	}
-//	log.Println("connected to the server : ")
-//
-//	//initial hand shakes with the server
-//	config(conn)
-//
-//	//go listenToUser(conn)
-//
-//	/*
-//	serverMessageChannel := make(chan string)
-//	go handleServerMessage(serverMessageChannel)
-//	//listening to the server forever
-//	for {
-//		// listen for reply
-//		message, err := bufio.NewReader(conn).ReadString('\n')
-//		if err != nil {
-//			panic(err)
-//		}
-//		log.Println("message received : "+message)
-//
-//		//color.Green("\n" + message+"\n")
-//
-//		serverMessageChannel <- message
-//	}
-//	*/
-//
-//}
+
+import (
+  "fmt"
+  "net"
+  "bufio"
+  "github.com/fatih/color"
+  "strings"
+  "github.com/bhargavbhegde7/GoChat/common"
+  //"encoding/json"
+)
+
+var signedIn bool
+var targetuser string
+var targetpubkey string
+var username string
+var pubkey string
+var targetPublicKey string
+
+func signup(conn net.Conn){
+
+  fmt.Printf("\nusername >>")
+  _, err := fmt.Scanf("%s\n", &username)
+
+  if err != nil {
+    fmt.Println("error getting username input")
+  }else{
+    if strings.TrimSpace(username) != ""{
+      pubkey = "abcdef"+"-"+username
+      jsonString := `{"reqtag":"`+common.SIGNUP+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+common.CONTROL_MSG+`"}`
+    	fmt.Fprintf(conn, jsonString+"\n")
+
+      //----------------------------------------
+      // listen for reply
+      message, err := bufio.NewReader(conn).ReadString('\n')
+      if err != nil {
+        panic(err)
+      }
+
+      if strings.Contains(message, common.SIGNUP_SUCCESSFUL){
+        color.Green("sign up successful")
+        signedIn = true
+      }else{
+        color.Red("signup error received")
+      }
+
+      //----------------------------------------
+    }else{
+      fmt.Println("\nerror in the username\n\n")
+    }
+  }
+}
+
+func getClients(conn net.Conn){
+  jsonString := `{"reqtag":"`+common.GET_CLIENTS+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+common.CONTROL_MSG+`"}`
+    fmt.Fprintf(conn, jsonString+"\n")
+
+  message, err := bufio.NewReader(conn).ReadString('\n')
+  if err != nil {
+    panic(err)
+  }
+
+  color.Green(message)
+
+}
+
+func selectTarget(conn net.Conn){
+  var username string
+  fmt.Printf("\ntarget username >>")
+  _, err := fmt.Scanf("%s\n", &username)
+
+  if err != nil {
+    fmt.Println("error getting target username input")
+  }else{
+    if strings.TrimSpace(username) != ""{
+      jsonString := `{"reqtag" : "`+common.SELECT_TARGET+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+common.CONTROL_MSG+`"}`
+      fmt.Fprintf(conn, jsonString+"\n")
+
+      //----------------------------------------
+      // listen for reply
+      message, err := bufio.NewReader(conn).ReadString('\n')
+      if err != nil {
+        panic(err)
+      }
+
+      if strings.Contains(message, common.TARGET_SET){
+        color.Green("target selection successful")
+        //plus get the pub key from the json too
+      }else{
+        color.Red("target error received")
+      }
+
+      //----------------------------------------
+
+      quit := make(chan int)
+      go startListeningToServer(conn, quit)
+      startListeningToMessages(conn, quit)
+
+    }else{
+      fmt.Println("\nerror in the username\n\n")
+    }
+  }
+}
+
+func startListeningToMessages(conn net.Conn, quit chan int){
+  fmt.Println("starting chat . . .")
+  fmt.Println("enter ^ to go to options")
+
+  for{
+    var message string
+    fmt.Printf("\n>>")
+    _, err := fmt.Scanf("%s\n", &message)
+    if err != nil {
+      fmt.Println(err)
+    }else{
+      if strings.Contains(message, "~~"){
+        break
+      }else {
+        jsonString := `{"reqtag" : "`+common.MESSAGE+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+message+`"}`
+          fmt.Fprintf(conn, jsonString+"\n")
+      }
+    }
+  }//infinite for loop ends
+  fmt.Println("closing chat")
+  close(quit)
+}
+
+func startListeningToServer(conn net.Conn, quit chan int){
+  fmt.Println("starting server listener thread")
+
+  for {
+    select {
+    case <-quit:
+      return
+    default:
+      message, err := bufio.NewReader(conn).ReadString('\n')
+      if err != nil {
+        panic(err)
+      }else {
+        color.Yellow(message)
+      }
+    }
+  }// infinite for ends
+}
+
+func parseOption(option int, conn net.Conn){
+  switch option {
+    case 1:
+      fmt.Println(". . . login")
+      break;
+    case 2:
+      signup(conn)
+      break
+    case 3:
+      getClients(conn)
+      break
+    case 4:
+      selectTarget(conn)
+      break
+    default:
+      fmt.Println("no match found")
+      break
+  }
+}
+
+func main(){
+
+  signedIn = false
+
+  conn, err := net.Dial("tcp", "127.0.0.1:8080")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("connected to the server : ")
+
+  //----------------------------------------
+  // listen for reply
+  message, err := bufio.NewReader(conn).ReadString('\n')
+  if err != nil {
+    panic(err)
+  }
+
+  color.Red(message)
+
+  //----------------------------------------
+
+for{
+
+    fmt.Println("instructions and options")
+
+    fmt.Println("1. login")
+    fmt.Println("2. sign up")
+    fmt.Println("3. get users")
+    fmt.Println("4. select target")
+    fmt.Println("ctrl+c to exit")
+
+    var option int
+    fmt.Printf("\n>>")
+    _, err := fmt.Scanf("%d\n", &option)
+    if err != nil {
+      fmt.Println(err)
+    }else{
+      parseOption(option, conn)
+    }
+  }//infinite for loop ends
+}
