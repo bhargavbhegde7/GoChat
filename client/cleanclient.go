@@ -9,13 +9,25 @@ import (
   //"encoding/json"
 )
 
+const PREFIX 			= "~&#"
+const SUFFIX			= "#&~"
+const GET_CLIENTS   	= PREFIX + "get_clients" + SUFFIX
+const SIGNUP 	    	= PREFIX + "signup" + SUFFIX
+const SELECT_TARGET 	= PREFIX + "selectTarget" + SUFFIX
+const SIGNUP_SUCCESSFUL = PREFIX + "signupsuccess" + SUFFIX
+const TARGET_SET    	= PREFIX + "targetset" + SUFFIX
+const CONTROL_MSG    	= PREFIX + "control" + SUFFIX
+const MESSAGE    	    = PREFIX + "control" + SUFFIX
+
 var signedIn bool
 var targetuser string
 var targetpubkey string
+var username string
+var pubkey string
+var targetPublicKey string
 
 func signup(conn net.Conn){
 
-  var username string
   fmt.Printf("\nusername >>")
   _, err := fmt.Scanf("%s\n", &username)
 
@@ -23,7 +35,8 @@ func signup(conn net.Conn){
     fmt.Println("error getting username input")
   }else{
     if strings.TrimSpace(username) != ""{
-      jsonString := `{"reqtag":"~&#signup#&~","username":"`+username+`","pubkey":"abcdef"}`
+      pubkey = "abcdef"+"-"+username
+      jsonString := `{"reqtag":"`+SIGNUP+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+CONTROL_MSG+`"}`
     	fmt.Fprintf(conn, jsonString+"\n")
 
       //----------------------------------------
@@ -33,13 +46,11 @@ func signup(conn net.Conn){
         panic(err)
       }
 
-      color.Red(message)
-
-      if strings.Contains(message, "~&#signupsuccess#&~"){
-        fmt.Println("sign up successful")
+      if strings.Contains(message, SIGNUP_SUCCESSFUL){
+        color.Green("sign up successful")
         signedIn = true
       }else{
-        fmt.Println("signup error received")
+        color.Red("signup error received")
       }
 
       //----------------------------------------
@@ -50,14 +61,15 @@ func signup(conn net.Conn){
 }
 
 func getClients(conn net.Conn){
-  fmt.Fprintf(conn, "~&#get_clients#&~"+"\n")
+  jsonString := `{"reqtag":"`+GET_CLIENTS+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+CONTROL_MSG+`"}`
+    fmt.Fprintf(conn, jsonString+"\n")
 
   message, err := bufio.NewReader(conn).ReadString('\n')
   if err != nil {
     panic(err)
   }
 
-  color.Red(message)
+  color.Green(message)
 
 }
 
@@ -70,7 +82,7 @@ func selectTarget(conn net.Conn){
     fmt.Println("error getting target username input")
   }else{
     if strings.TrimSpace(username) != ""{
-      jsonString := `{"reqtag" : "~&#selectTarget#&~", "username" : "`+username+`"}`
+      jsonString := `{"reqtag" : "`+SELECT_TARGET+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+CONTROL_MSG+`"}`
       fmt.Fprintf(conn, jsonString+"\n")
 
       //----------------------------------------
@@ -80,16 +92,18 @@ func selectTarget(conn net.Conn){
         panic(err)
       }
 
-      color.Red(message)
-
-      if strings.Contains(message, "~&#targetset#&~"){
-        fmt.Println("target selection successful")
+      if strings.Contains(message, TARGET_SET){
+        color.Green("target selection successful")
         //plus get the pub key from the json too
       }else{
-        fmt.Println("target error received")
+        color.Red("target error received")
       }
 
       //----------------------------------------
+
+      quit := make(chan int)
+      go startListeningToServer(conn, quit)
+      startListeningToMessages(conn, quit)
 
     }else{
       fmt.Println("\nerror in the username\n\n")
@@ -97,10 +111,45 @@ func selectTarget(conn net.Conn){
   }
 }
 
-func startListeningToUser(conn net.Conn){
+func startListeningToMessages(conn net.Conn, quit chan int){
   fmt.Println("starting chat . . .")
   fmt.Println("enter ^ to go to options")
-  //stopSignal := make(chan bool)
+
+  for{
+    var message string
+    fmt.Printf("\n>>")
+    _, err := fmt.Scanf("%s\n", &message)
+    if err != nil {
+      fmt.Println(err)
+    }else{
+      if strings.Contains(message, "~~"){
+        break
+      }else {
+        jsonString := `{"reqtag" : "`+MESSAGE+`","username":"`+username+`","pubkey":"`+pubkey+`","message":"`+message+`"}`
+          fmt.Fprintf(conn, jsonString+"\n")
+      }
+    }
+  }//infinite for loop ends
+  fmt.Println("closing chat")
+  close(quit)
+}
+
+func startListeningToServer(conn net.Conn, quit chan int){
+  fmt.Println("starting server listener thread")
+
+  for {
+    select {
+    case <-quit:
+      return
+    default:
+      message, err := bufio.NewReader(conn).ReadString('\n')
+      if err != nil {
+        panic(err)
+      }else {
+        color.Yellow(message)
+      }
+    }
+  }// infinite for ends
 }
 
 func parseOption(option int, conn net.Conn){
@@ -116,7 +165,6 @@ func parseOption(option int, conn net.Conn){
       break
     case 4:
       selectTarget(conn)
-      startListeningToUser(conn)
       break
     default:
       fmt.Println("no match found")

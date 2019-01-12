@@ -25,21 +25,25 @@ type Request struct {
 	Reqtag string `json:"reqtag"`
 	Username string `json:"username"`
 	Pubkey string `json:"pubkey"`
+	Message string `json:"message"`
 }
 
-const GET_CLIENTS   	= "~&#get_clients#&~"
-const LOGIN 	    	= "~&#login#&~"
-const SIGNUP 	    	= "~&#signup#&~"
-const SELECT_TARGET 	= "~&#selectTarget#&~"
-const TARGET_FAIL   	= "~&#targetFail#&~"
-const TARGET_SET    	= "~&#targetset#&~"
-const SIGNUP_FAILURE    = "~&#signupfailure#&~"
-const SIGNUP_SUCCESSFUL = "~&#signupsuccess#&~"
-const ERROR    		= "~&#error#&~"
+const PREFIX 			= "~&#"
+const SUFFIX			= "#&~"
+const GET_CLIENTS   	= PREFIX + "get_clients" + SUFFIX
+const LOGIN 	    	= PREFIX + "login" + SUFFIX
+const SIGNUP 	    	= PREFIX + "signup" + SUFFIX
+const SELECT_TARGET 	= PREFIX + "selectTarget" + SUFFIX
+const TARGET_FAIL   	= PREFIX + "targetFail" + SUFFIX
+const TARGET_SET    	= PREFIX + "targetset" + SUFFIX
+const SIGNUP_FAILURE    = PREFIX + "signupfailure" + SUFFIX
+const SIGNUP_SUCCESSFUL = PREFIX + "signupsuccess" + SUFFIX
+const ERROR    			= PREFIX + "error" + SUFFIX
 
 var clientsList []Client
+//var clientsList = make(map[string]Client)
 
-func handleRequest(client Client){
+func requestHandler(client Client){
 
 	request := Request{}
 	json.Unmarshal([]byte(client.message), &request)
@@ -110,16 +114,21 @@ func signup(client Client, username string) error{
 	return nil
 }
 
-func handleMessage(client chan Client) {
+/**
+starts a go-routine that keeps listening to the channel 'clientChannel'.
+Whenever there is a new message by a client, that client is put into this channel by  'clientHandler' function.
+ */
+func messageListener(clientChannel chan Client) {
 	for {
-		client := <-client
-		//message := client.message
-		//fmt.Printf("\nclient %d said : "+message, client.id)
-		go handleRequest(client)
+		go requestHandler(<-clientChannel)
 	}
 }
 
-func handleClient(client Client, clientChannel chan Client) {
+/**
+This is run for each client.
+When there is a new message by a client, that client is put into the 'clientChannel' along with a message attached to her.
+ */
+func clientHandler(client Client, clientChannel chan Client) {
 
 	go fmt.Fprintf(client.conn, "Connection successful"+"\n")
 
@@ -127,14 +136,15 @@ func handleClient(client Client, clientChannel chan Client) {
 	//keep listening to this client
 	for {
 		buf := bufio.NewReader(client.conn)
-		message, err := buf.ReadString('\n')
+		request, err := buf.ReadString('\n')
 
 		if err != nil {
 			fmt.Printf("Client disconnected.\n")
 			break
 		}
 
-		clientChannel <- Client{client.id, message, client.conn, "", ""}
+		client.message = request
+		clientChannel <- client
 	}
 }
 
@@ -153,23 +163,27 @@ func main() {
 	//--------------- log setup ------------------
 
 	clientChannel := make(chan Client)
-	go handleMessage(clientChannel)
+	go messageListener(clientChannel)
 	count := 0
 
-	ln, err := net.Listen("tcp", ":8080")
+	// returns a net.Listener object
+	listener, err := net.Listen("tcp", ":8080")
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Server is ready.")
 
+	/**
+	when ever a new connection comes, create a new client object and start a dedicated go-routine for that client.
+	 */
 	for {
-		conn, err := ln.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
 			panic(err)
 		}
 		fmt.Println("Accepted connection.")
 
 		count++
-		go handleClient(Client{count, "", conn, "", ""}, clientChannel)
+		go clientHandler(Client{count, "", conn, "", ""}, clientChannel)
 	}
 }
