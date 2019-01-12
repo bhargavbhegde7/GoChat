@@ -19,7 +19,7 @@ type Client struct {
 	target 		string
 }
 
-var clientsList []Client
+var clientsList []*Client
 
 func sendResponse(conn net.Conn, response* common.Response){
 	responseStr, err := json.Marshal(response)
@@ -30,7 +30,7 @@ func sendResponse(conn net.Conn, response* common.Response){
 	fmt.Fprintf(conn, string(responseStr)+"\n")
 }
 
-func requestHandler(client Client){
+func requestHandler(client *Client){
 
 	request := common.Request{}
 	json.Unmarshal([]byte(client.message), &request)
@@ -39,8 +39,8 @@ func requestHandler(client Client){
 
 		case common.GET_CLIENTS:
 			clients := ""
-			for _, client := range clientsList {
-				clients = clients+" : "+client.username
+			for _, eachClient := range clientsList {
+				clients = clients+" : "+eachClient.username
 			}
 			response := common.NewResponse(common.CLIENTS_LIST, clients, common.NONE)
 			go sendResponse(client.conn, response)
@@ -75,6 +75,10 @@ func requestHandler(client Client){
 			}
 
 			break
+		case common.CLIENT_MESSAGE:
+			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
+			go sendResponse(getClient(client.target).conn, response)
+			break
 		default:
 			response := common.NewResponse(common.NONE, common.NONE, common.NONE)
 			go sendResponse(client.conn, response)
@@ -83,8 +87,19 @@ func requestHandler(client Client){
 	}
 }
 
-func setTarget(client Client, username string) error{
+func getClient(username string) *Client{
+	var retVal *Client
+	for _, client := range clientsList {
+		if username == client.username{
+			retVal = client
+		}
+	}
+	return retVal
+}
+
+func setTarget(client *Client, username string) error{
 	//set this username as the target for this client
+	client.target = username
 	return nil
 }
 
@@ -97,7 +112,7 @@ func userExists(username string) bool{
 	return false
 }
 
-func signup(client Client, username string) error{
+func signup(client *Client, username string) error{
 	//check for existing username and
 	//send either ~&#signupsuccess#&~
 	//or ~&#error#&~ + ~&#signupfailure#&~
@@ -114,7 +129,7 @@ func signup(client Client, username string) error{
 starts a go-routine that keeps listening to the channel 'clientChannel'.
 Whenever there is a new message by a client, that client is put into this channel by  'clientHandler' function.
  */
-func messageListener(clientChannel chan Client) {
+func messageListener(clientChannel chan *Client) {
 	for {
 		go requestHandler(<-clientChannel)
 	}
@@ -124,7 +139,7 @@ func messageListener(clientChannel chan Client) {
 This is run for each client.
 When there is a new message by a client, that client is put into the 'clientChannel' along with a message attached to her.
  */
-func clientHandler(client Client, clientChannel chan Client) {
+func clientHandler(client *Client, clientChannel chan *Client) {
 
 	response := common.NewResponse(common.CONNECTION_SUCCESSFUL, common.NONE, common.NONE)
 	go sendResponse(client.conn, response)
@@ -159,7 +174,7 @@ func main() {
 	log.SetOutput(f)
 	//--------------- log setup ------------------
 
-	clientChannel := make(chan Client)
+	clientChannel := make(chan *Client)
 	go messageListener(clientChannel)
 	count := 0
 
@@ -181,6 +196,6 @@ func main() {
 		fmt.Println("Accepted connection.")
 
 		count++
-		go clientHandler(Client{count, "", conn, "", ""}, clientChannel)
+		go clientHandler(&Client{count, "", conn, "", ""}, clientChannel)
 	}
 }

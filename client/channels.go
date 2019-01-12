@@ -8,8 +8,8 @@ import (
 var errorChannel = make(chan common.Response)
 var messageChannel = make(chan common.Response)
 
-var controlInputChannel = make(chan common.Request)
-var messageInputChannel = make(chan common.Request)
+/*var controlInputChannel = make(chan common.Request)
+var messageInputChannel = make(chan common.Request)*/
 
 func channelSelector(){
 	for{
@@ -20,23 +20,23 @@ func channelSelector(){
 		case messageResponse := <-messageChannel:
 			go messageHandler(messageResponse)
 			break
-		case controlRequest := <-controlInputChannel:
+		/*case controlRequest := <-controlInputChannel:
 			go controlInputHandler(controlRequest)
 			break
 		case messageRequest := <-messageInputChannel:
 			go messageInputHandler(messageRequest)
-			break
+			break*/
 		}
 	}
 }
 
-func controlInputHandler(controlRequest common.Request){
+/*func controlInputHandler(controlRequest common.Request){
 
 }
 
 func messageInputHandler(messageRequest common.Request){
 
-}
+}*/
 
 func errorHandler(errorResponse common.Response){
 	color.Red(errorResponse.Message)

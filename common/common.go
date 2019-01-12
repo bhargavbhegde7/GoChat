@@ -1,5 +1,7 @@
 package common
 
+//usernames in both request and response indicate who the message is from
+
 type Response struct {
 	ResTag  string `json:"restag"`
 	Message string `json:"message"`

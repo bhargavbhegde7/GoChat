@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 )
 
@@ -45,8 +46,8 @@ func parseInput(input string, conn net.Conn){
 		break
 	default:
 		// consider this as a message payload
-		fmt.Println("no match found")
+		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubkey, input)
+		go sendRequest(conn, request)
 		break
 	}
 }
-
