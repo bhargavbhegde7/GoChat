@@ -7,11 +7,8 @@ import (
 	"net"
 	"os"
 	"log"
-	//"strings"
 	"errors"
 	"encoding/json"
-	//"github.com/fatih/color"
-	//"bytes"
 )
 
 type Client struct {
@@ -22,67 +19,67 @@ type Client struct {
 	target 		string
 }
 
-type Request struct {
-	Reqtag string `json:"reqtag"`
-	Username string `json:"username"`
-	Pubkey string `json:"pubkey"`
-	Message string `json:"message"`
-}
-
 var clientsList []Client
-//var clientsList = make(map[string]Client)
 
-func sendResponse(conn net.Conn, tag string, message string){
-	user := &common.Response{ResTag: tag, Message: message}
-	response, err := json.Marshal(user)
+func sendResponse(conn net.Conn, response* common.Response){
+	responseStr, err := json.Marshal(response)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Fprintf(conn, string(response)+"\n")
+	fmt.Fprintf(conn, string(responseStr)+"\n")
 }
 
 func requestHandler(client Client){
 
-	request := Request{}
+	request := common.Request{}
 	json.Unmarshal([]byte(client.message), &request)
 
-	switch request.Reqtag {
-	case common.GET_CLIENTS:
+	switch request.ReqTag {
+
+		case common.GET_CLIENTS:
 			clients := ""
 			for _, client := range clientsList {
-			    clients = clients+" : "+client.username
+				clients = clients+" : "+client.username
 			}
-			go sendResponse(client.conn, common.CLIENTS_LIST, clients)
+			response := common.NewResponse(common.CLIENTS_LIST, clients, common.NONE)
+			go sendResponse(client.conn, response)
 
-		break
-	case common.LOGIN:
-			go sendResponse(client.conn, common.LOGIN_SUCCESS, common.NONE)
+			break
+		case common.LOGIN:
+			response := common.NewResponse(common.LOGIN_SUCCESS, common.NONE, common.NONE)
+			go sendResponse(client.conn, response)
 
-		break
-	case common.SIGNUP:
+			break
+		case common.SIGNUP:
 			err := signup(client, request.Username)
 			if err != nil{
-				go sendResponse(client.conn, common.SIGNUP_FAILURE, common.NONE)
+				response := common.NewResponse(common.SIGNUP_FAILURE, common.NONE, common.NONE)
+				go sendResponse(client.conn, response)
 			}else{
-				go sendResponse(client.conn, common.SIGNUP_SUCCESSFUL, common.NONE)
+				response := common.NewResponse(common.SIGNUP_SUCCESSFUL, common.NONE, common.NONE)
+				go sendResponse(client.conn, response)
 			}
 
-		break
-	case common.SELECT_TARGET:
+			break
+		case common.SELECT_TARGET:
 			err := setTarget(client, request.Username)
 			if err != nil{
-				go sendResponse(client.conn, common.TARGET_FAIL, common.NONE)
+				response := common.NewResponse(common.TARGET_FAIL, common.NONE, common.NONE)
+				go sendResponse(client.conn, response)
 			}else{
-				go sendResponse(client.conn, common.TARGET_SET, common.NONE)
+				pubkeyOfTargetClient := "abcdefg-bhargav1234-pubkey"
+				response := common.NewResponse(common.TARGET_SET, pubkeyOfTargetClient, common.NONE)
+				go sendResponse(client.conn, response)
 				//plus attach the public key to the json
 			}
 
-		break
+			break
 		default:
-			go sendResponse(client.conn, common.NONE, common.NONE)
+			response := common.NewResponse(common.NONE, common.NONE, common.NONE)
+			go sendResponse(client.conn, response)
 
-		break
+			break
 	}
 }
 
@@ -129,7 +126,8 @@ When there is a new message by a client, that client is put into the 'clientChan
  */
 func clientHandler(client Client, clientChannel chan Client) {
 
-	go fmt.Fprintf(client.conn, "Connection successful"+"\n")
+	response := common.NewResponse(common.CONNECTION_SUCCESSFUL, common.NONE, common.NONE)
+	go sendResponse(client.conn, response)
 
 	//TODO put the client message into a channel, follow the same mechanism
 	//keep listening to this client
