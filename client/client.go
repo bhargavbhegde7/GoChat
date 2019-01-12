@@ -10,7 +10,6 @@ var targetuser string
 var targetpubkey string
 var username string
 var pubkey string
-var targetPublicKey string
 
 func main(){
 
@@ -18,7 +17,7 @@ func main(){
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("connected to the server : ")
+	fmt.Println("connected to the server")
 
 	go channelSelector()
 	go listenToServer(conn)

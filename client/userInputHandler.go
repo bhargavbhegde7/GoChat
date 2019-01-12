@@ -47,7 +47,7 @@ func parseInput(input string, conn net.Conn){
 	default:
 		// consider this as a message payload
 		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubkey, input)
-		go sendRequest(conn, request)
+		sendMessage(conn, request)
 		break
 	}
 }

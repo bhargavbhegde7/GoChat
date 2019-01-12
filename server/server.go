@@ -76,6 +76,8 @@ func requestHandler(client *Client){
 
 			break
 		case common.CLIENT_MESSAGE:
+			// TODO search for target client. if not available return an error response to the sender
+			// TODO if available send the message response to the target
 			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
 			go sendResponse(getClient(client.target).conn, response)
 			break

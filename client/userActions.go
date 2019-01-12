@@ -43,6 +43,10 @@ func login(conn net.Conn){
 
 }
 
+func sendMessage(conn net.Conn, request *common.Request){
+	go sendRequest(conn, request)
+}
+
 func signup(conn net.Conn){
 
 	fmt.Printf("\nusername >>")
