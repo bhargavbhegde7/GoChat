@@ -23,6 +23,22 @@ func NewResponse(resTag string, message string, username string) *Response {
 	return &Response{ResTag: resTag, Message:message, Username: username}
 }
 
+func AsymmetricEncryption(key string, message string) string {
+	return message + " encrypted with " + key
+}
+
+func SymmetricEncryption(key string, message string) string {
+	return message + " encrypted with " + key
+}
+
+func AsymmetricDecryption(key string, message string) string {
+	return "decrypted : "+message
+}
+
+func SymmetricDecryption(key string, message string) string {
+	return "decrypted : "+message
+}
+
 const GET_CLIENTS   		= "get_clients"
 const LOGIN 	    		= "login"
 const SIGNUP 	    		= "signup"
@@ -37,3 +53,5 @@ const CLIENTS_LIST    		= "clients_list"
 const NONE					= "NONE"
 const CLIENT_MESSAGE 		= "message"
 const CONNECTION_SUCCESSFUL = "connection_successful"
+const SERVER_KEY_EXCHANGE 	= "server_key_exchange"
+const SERVER_KEY_ACK 		= "server_key_ack"

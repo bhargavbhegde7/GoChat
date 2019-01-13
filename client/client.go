@@ -5,11 +5,11 @@ import (
 	"net"
 )
 
-var signedIn bool
-var targetuser string
 var targetpubkey string
 var username string
 var pubkey string
+var serverPubKey string
+var serverKey string
 
 func main(){
 

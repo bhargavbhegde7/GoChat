@@ -14,5 +14,5 @@ func channelSelector(){
 }
 
 func messageHandler(messageResponse common.Response){
-	color.Yellow(messageResponse.Message)
+	color.Yellow(messageResponse.Username+" : "+messageResponse.Message)
 }

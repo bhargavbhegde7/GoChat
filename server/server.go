@@ -20,6 +20,8 @@ type Client struct {
 }
 
 var clientsList []*Client
+var pubKey = "server-pub-key"
+var privKey = "server-priv-key"
 
 func sendResponse(conn net.Conn, response* common.Response){
 	responseStr, err := json.Marshal(response)
@@ -54,7 +56,7 @@ func requestHandler(client *Client){
 		case common.SIGNUP:
 			err := signup(client, request.Username)
 			if err != nil{
-				response := common.NewResponse(common.SIGNUP_FAILURE, common.NONE, common.NONE)
+				response := common.NewResponse(common.SIGNUP_FAILURE, "User already exists", common.NONE)
 				go sendResponse(client.conn, response)
 			}else{
 				response := common.NewResponse(common.SIGNUP_SUCCESSFUL, common.NONE, common.NONE)
@@ -80,6 +82,14 @@ func requestHandler(client *Client){
 			// TODO if available send the message response to the target
 			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
 			go sendResponse(getClient(client.target).conn, response)
+			break
+		case common.SERVER_KEY_EXCHANGE:
+			encryptedClientKey := request.Message
+			clientKey := common.SymmetricDecryption(privKey, encryptedClientKey)
+			encryptedACK := common.SymmetricEncryption(clientKey, common.SERVER_KEY_ACK)
+
+			response := common.NewResponse(common.SERVER_KEY_ACK, encryptedACK, request.Username)
+			go sendResponse(client.conn, response)
 			break
 		default:
 			response := common.NewResponse(common.NONE, common.NONE, common.NONE)
@@ -143,7 +153,7 @@ When there is a new message by a client, that client is put into the 'clientChan
  */
 func clientHandler(client *Client, clientChannel chan *Client) {
 
-	response := common.NewResponse(common.CONNECTION_SUCCESSFUL, common.NONE, common.NONE)
+	response := common.NewResponse(common.CONNECTION_SUCCESSFUL, pubKey, common.NONE)
 	go sendResponse(client.conn, response)
 
 	//TODO put the client message into a channel, follow the same mechanism

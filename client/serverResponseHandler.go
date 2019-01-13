@@ -22,7 +22,7 @@ func listenToServer(conn net.Conn){
 			switch response.ResTag {
 
 				case common.SIGNUP_FAILURE:
-					color.Red("Couldn't sign up.")
+					color.Red("Couldn't sign up. reason : "+response.Message)
 					break
 
 				case common.CLIENT_MESSAGE:
@@ -31,6 +31,8 @@ func listenToServer(conn net.Conn){
 
 				case common.CONNECTION_SUCCESSFUL:
 					color.Green("Connected to server")
+					serverPubKey = response.Message
+					initServerKeyExchange(conn)
 					break
 
 				case common.SIGNUP_SUCCESSFUL:
@@ -50,12 +52,22 @@ func listenToServer(conn net.Conn){
 					color.Red("Couldn't set the target.")
 					break
 
+				case common.SERVER_KEY_ACK:
+					encryptedACK := response.Message
+					decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
+					if common.SERVER_KEY_ACK == decryptedACK{
+						color.Green("Symmetric Key exchange successful")
+					}else{
+						color.Red("Symmetric Key exchange failed")
+					}
+					break
+
 				case common.NONE:
 					fmt.Println("Request tag did not match to any in server")
 					break
 
 				default:
-					fmt.Println("unrecognised tag : "+response.ResTag+", message : "+response.Message)
+					fmt.Println("received unrecognised tag : "+response.ResTag+", message : "+response.Message)
 			}// response tag switch ends
 		}
 	}// infinite for ends

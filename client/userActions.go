@@ -65,3 +65,15 @@ func signup(conn net.Conn){
 		}
 	}
 }
+
+func generateRandomKey() string{
+	return "randomKey"
+}
+
+func initServerKeyExchange(conn net.Conn){
+	key := generateRandomKey()
+	encryptedKey := common.AsymmetricEncryption(serverPubKey, key)
+
+	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubkey, encryptedKey)
+	go sendRequest(conn, request)
+}
