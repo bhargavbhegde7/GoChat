@@ -1,21 +1,28 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
+	"os"
+	"strings"
 )
 
 func startREPL(conn net.Conn){
 	fmt.Println("enter '"+HELP+"' for instructions")
+	in := bufio.NewReader(os.Stdin)
+
 	for{
-		var input string
 		fmt.Printf("\n>>")
-		_, err := fmt.Scanf("%s\n", &input)
+
+		line, err := in.ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 		}else{
-			parseInput(input, conn)
+			line = strings.TrimSuffix(line, "\n")
+			fmt.Println(line)
+			parseInput(line, conn)
 		}
 	}//infinite for loop ends
 }

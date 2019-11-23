@@ -81,15 +81,23 @@ func requestHandler(client *Client){
 			// TODO search for target client. if not available return an error response to the sender
 			// TODO if available send the message response to the target
 			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
-			go sendResponse(getClient(client.target).conn, response)
+			targetClient := getClient(client.target)
+
+			if targetClient != nil {
+				go sendResponse(targetClient.conn, response)
+			}else {
+				response := common.NewResponse(common.TARGET_NOT_SET, "Please set a target user", common.NONE)
+				go sendResponse(client.conn, response)
+			}
+
 			break
 		case common.SERVER_KEY_EXCHANGE:
 			encryptedClientKey := request.Message
 			clientKey := common.SymmetricDecryption(privKey, encryptedClientKey)
 			encryptedACK := common.SymmetricEncryption(clientKey, common.SERVER_KEY_ACK)
 
-			response := common.NewResponse(common.SERVER_KEY_ACK, encryptedACK, request.Username)
-			go sendResponse(client.conn, response)
+			response2 := common.NewResponse(common.SERVER_KEY_ACK, encryptedACK, common.NONE)
+			go sendResponse(client.conn, response2)
 			break
 		default:
 			response := common.NewResponse(common.NONE, common.NONE, common.NONE)
@@ -173,7 +181,7 @@ func clientHandler(client *Client, clientChannel chan *Client) {
 }
 
 func main() {
-
+	fmt.Println("Server is ready.")
 	//--------------- log setup ------------------
 	f, err := os.OpenFile("server_logs", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {

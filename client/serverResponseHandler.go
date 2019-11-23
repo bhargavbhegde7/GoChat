@@ -62,6 +62,10 @@ func listenToServer(conn net.Conn){
 					}
 					break
 
+				case common.TARGET_NOT_SET:
+					color.Red("Target user is not set. Please see instructions by inputting '~~'")
+					break
+
 				case common.NONE:
 					fmt.Println("Request tag did not match to any in server")
 					break
