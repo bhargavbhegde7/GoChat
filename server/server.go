@@ -78,12 +78,10 @@ func requestHandler(client *Client){
 
 			break
 		case common.CLIENT_MESSAGE:
-			// TODO search for target client. if not available return an error response to the sender
-			// TODO if available send the message response to the target
-			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
 			targetClient := getClient(client.target)
 
 			if targetClient != nil {
+				response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
 				go sendResponse(targetClient.conn, response)
 			}else {
 				response := common.NewResponse(common.TARGET_NOT_SET, "Please set a target user", common.NONE)
@@ -119,8 +117,11 @@ func getClient(username string) *Client{
 
 func setTarget(client *Client, username string) error{
 	//set this username as the target for this client
-	client.target = username
-	return nil
+	if userExists(username){
+		client.target = username
+		return nil
+	}
+	return errors.New("user does not exist")
 }
 
 func userExists(username string) bool{
