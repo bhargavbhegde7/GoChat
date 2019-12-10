@@ -15,6 +15,20 @@ type Request struct {
 	Message  string `json:"message"`
 }
 
+func generateRandomKey() string{
+	return RandomString(10)
+}
+
+func RandomString(n int) string {
+	var letter = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letter[rand.Intn(len(letter))]
+	}
+	return string(b)
+}
+
 func NewRequest(reqTag string, username string, pubkey string, message string) *Request {
 	return &Request{ReqTag: reqTag, Username: username, Pubkey:pubkey, Message:message}
 }
