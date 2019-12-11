@@ -67,7 +67,7 @@ func signup(conn net.Conn){
 }
 
 func initServerKeyExchange(conn net.Conn){
-	key := common.generateRandomKey()
+	key := common.GenerateRandomKey()
 	encryptedKey := common.AsymmetricEncryption(serverPubKey, key)
 
 	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubkey, encryptedKey)

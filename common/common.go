@@ -15,7 +15,7 @@ type Request struct {
 	Message  string `json:"message"`
 }
 
-func generateRandomKey() string{
+func GenerateRandomKey() string{
 	return RandomString(10)
 }
 
