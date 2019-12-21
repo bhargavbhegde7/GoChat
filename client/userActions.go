@@ -18,7 +18,7 @@ func sendRequest(conn net.Conn, request *common.Request) {
 }
 
 func getClients(conn net.Conn) {
-	request := common.NewRequest(common.GET_CLIENTS, username, pubkey, common.NONE)
+	request := common.NewRequest(common.GET_CLIENTS, username, pubKey, []byte(common.NONE))
 	go sendRequest(conn, request)
 }
 
@@ -31,7 +31,7 @@ func selectTarget(conn net.Conn) {
 		fmt.Println("error getting target username input")
 	} else {
 		if strings.TrimSpace(username) != "" {
-			request := common.NewRequest(common.SELECT_TARGET, username, pubkey, common.NONE)
+			request := common.NewRequest(common.SELECT_TARGET, username, pubKey, []byte(common.NONE))
 			go sendRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
@@ -56,9 +56,9 @@ func signup(conn net.Conn) {
 		fmt.Println("error getting username input")
 	} else {
 		if strings.TrimSpace(username) != "" {
-			pubkey = "abcdef" + "-" + username
+			//pubkey = "abcdef" + "-" + username
 
-			request := common.NewRequest(common.SIGNUP, username, pubkey, common.NONE)
+			request := common.NewRequest(common.SIGNUP, username, pubKey, []byte(common.NONE))
 			go sendRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
@@ -67,10 +67,9 @@ func signup(conn net.Conn) {
 }
 
 func initServerKeyExchange(conn net.Conn) {
-	key := common.GenerateRandomKey()
-	encryptedKey := common.AsymmetricEncryption(serverPubKey, key)
+	serverKey = common.GenerateRandomKey()
+	encryptedKey := common.AsymmetricPublicKeyEncryption(serverPubKey, serverKey)
 
-	pubkey = "abcdef" + "-" + username + "pubkey-client"
-	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubkey, encryptedKey)
+	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubKey, encryptedKey)
 	go sendRequest(conn, request)
 }

@@ -7,12 +7,12 @@ import (
 
 var messageChannel = make(chan common.Response)
 
-func channelSelector(){
-	for{
+func channelSelector() {
+	for {
 		go messageHandler(<-messageChannel)
 	}
 }
 
-func messageHandler(messageResponse common.Response){
-	color.Yellow(messageResponse.Username+" : "+messageResponse.Message)
+func messageHandler(messageResponse common.Response) {
+	color.Yellow(messageResponse.Username + " : " + string(messageResponse.Message))
 }

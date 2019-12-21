@@ -17,12 +17,12 @@ type Client struct {
 	conn     net.Conn
 	username string
 	target   string
-	pubKey   string
+	pubKey   []byte
 }
 
 var clientsList []*Client
-var pubKey = "server-pub-key"
-var privKey = "server-priv-key"
+var pubKey []byte
+var privKey []byte
 
 func sendResponse(conn net.Conn, response *common.Response) {
 	responseStr, err := json.Marshal(response)
@@ -45,22 +45,22 @@ func requestHandler(client *Client) {
 		for _, eachClient := range clientsList {
 			clients = clients + " : " + eachClient.username
 		}
-		response := common.NewResponse(common.CLIENTS_LIST, clients, common.NONE)
+		response := common.NewResponse(common.CLIENTS_LIST, []byte(clients), common.NONE)
 		go sendResponse(client.conn, response)
 
 		break
 	case common.LOGIN:
-		response := common.NewResponse(common.LOGIN_SUCCESS, common.NONE, common.NONE)
+		response := common.NewResponse(common.LOGIN_SUCCESS, []byte(common.NONE), common.NONE)
 		go sendResponse(client.conn, response)
 
 		break
 	case common.SIGNUP:
 		err := signup(client, request.Username)
 		if err != nil {
-			response := common.NewResponse(common.SIGNUP_FAILURE, "User already exists", common.NONE)
+			response := common.NewResponse(common.SIGNUP_FAILURE, []byte("User already exists"), common.NONE)
 			go sendResponse(client.conn, response)
 		} else {
-			response := common.NewResponse(common.SIGNUP_SUCCESSFUL, common.NONE, common.NONE)
+			response := common.NewResponse(common.SIGNUP_SUCCESSFUL, []byte(common.NONE), common.NONE)
 			go sendResponse(client.conn, response)
 		}
 
@@ -68,7 +68,7 @@ func requestHandler(client *Client) {
 	case common.SELECT_TARGET:
 		err := setTarget(client, request.Username)
 		if err != nil {
-			response := common.NewResponse(common.TARGET_FAIL, common.NONE, common.NONE)
+			response := common.NewResponse(common.TARGET_FAIL, []byte(common.NONE), common.NONE)
 			go sendResponse(client.conn, response)
 		} else {
 
@@ -76,11 +76,11 @@ func requestHandler(client *Client) {
 
 			if targetClient != nil {
 				pubkeyOfTargetClient := targetClient.pubKey
-				response := common.NewResponse(common.TARGET_SET, pubkeyOfTargetClient, common.NONE)
+				response := common.NewResponse(common.TARGET_SET, []byte(pubkeyOfTargetClient), common.NONE)
 				go sendResponse(client.conn, response)
 				//plus attach the public key to the json
 			} else {
-				response := common.NewResponse(common.TARGET_FAIL, common.NONE, common.NONE)
+				response := common.NewResponse(common.TARGET_FAIL, []byte(common.NONE), common.NONE)
 				go sendResponse(client.conn, response)
 			}
 		}
@@ -93,14 +93,14 @@ func requestHandler(client *Client) {
 			response := common.NewResponse(common.CLIENT_MESSAGE, request.Message, request.Username)
 			go sendResponse(targetClient.conn, response)
 		} else {
-			response := common.NewResponse(common.TARGET_NOT_SET, "Please set a target user", common.NONE)
+			response := common.NewResponse(common.TARGET_NOT_SET, []byte("Please set a target user"), common.NONE)
 			go sendResponse(client.conn, response)
 		}
 
 		break
 	case common.SERVER_KEY_EXCHANGE:
 		encryptedClientKey := request.Message
-		clientKey := common.AsymmetricDecryption(privKey, encryptedClientKey)
+		clientKey := common.AsymmetricPrivateKeyDecryption(privKey, encryptedClientKey)
 		encryptedACK := common.SymmetricEncryption(clientKey, common.SERVER_KEY_ACK)
 
 		client.pubKey = request.Pubkey
@@ -108,7 +108,7 @@ func requestHandler(client *Client) {
 		go sendResponse(client.conn, response)
 		break
 	default:
-		response := common.NewResponse(common.NONE, common.NONE, common.NONE)
+		response := common.NewResponse(common.NONE, []byte(common.NONE), common.NONE)
 		go sendResponse(client.conn, response)
 
 		break
@@ -191,45 +191,9 @@ func clientHandler(client *Client, clientChannel chan *Client) {
 	}
 }
 
-func readTextFromFile(fileName string) string{
-	file, err := os.Open(fileName)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer file.Close()
-
-	fileinfo, err := file.Stat()
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	filesize := fileinfo.Size()
-	buffer := make([]byte, filesize)
-
-	_, err = file.Read(buffer)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	result := string(buffer)
-
-	return result
-}
-
-func initRSA() {
-	pub_fileName := "pub_key"
-	priv_fileName := "priv_key"
-
-	pubKey = readTextFromFile(pub_fileName)
-	privKey = readTextFromFile(priv_fileName)
-
-	fmt.Println(pubKey)
-	fmt.Println(privKey)
-}
-
 func main() {
 	fmt.Println("Server is ready.")
-	initRSA()
+	pubKey, privKey = common.InitRSA()
 	//--------------- log setup ------------------
 	f, err := os.OpenFile("server_logs", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -264,6 +228,6 @@ func main() {
 		fmt.Println("Accepted connection.")
 
 		count++
-		go clientHandler(&Client{count, "", conn, "", "", ""}, clientChannel)
+		go clientHandler(&Client{count, "", conn, "", "", []byte("")}, clientChannel)
 	}
 }

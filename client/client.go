@@ -2,16 +2,20 @@ package main
 
 import (
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 )
 
-var targetpubkey string
+var targetpubkey []byte
 var username string
-var pubkey string
-var serverPubKey string
-var serverKey string
+var serverPubKey []byte
+var serverKey []byte
+var pubKey []byte
+var privKey []byte
 
-func main(){
+func main() {
+
+	pubKey, privKey = common.InitRSA()
 
 	conn, err := net.Dial("tcp", "127.0.0.1:8080")
 	if err != nil {

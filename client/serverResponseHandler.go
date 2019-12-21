@@ -9,70 +9,70 @@ import (
 	"net"
 )
 
-func listenToServer(conn net.Conn){
+func listenToServer(conn net.Conn) {
 
 	for {
 		serverMessage, err := bufio.NewReader(conn).ReadString('\n')
 		if err != nil {
 			panic(err)
-		}else {
+		} else {
 			response := common.Response{}
 			json.Unmarshal([]byte(serverMessage), &response)
 			// TODO use a hashmap to save all the channels. select them based on tag and send the response to that channel
 			switch response.ResTag {
 
-				case common.SIGNUP_FAILURE:
-					color.Red("Couldn't sign up. reason : "+response.Message)
-					break
+			case common.SIGNUP_FAILURE:
+				color.Red("Couldn't sign up. reason : " + string(response.Message))
+				break
 
-				case common.CLIENT_MESSAGE:
-					messageChannel<-response
-					break
+			case common.CLIENT_MESSAGE:
+				messageChannel <- response
+				break
 
-				case common.CONNECTION_SUCCESSFUL:
-					color.Green("Connected to server")
-					serverPubKey = response.Message
-					initServerKeyExchange(conn)
-					break
+			case common.CONNECTION_SUCCESSFUL:
+				color.Green("Connected to server")
+				serverPubKey = response.Message
+				initServerKeyExchange(conn)
+				break
 
-				case common.SIGNUP_SUCCESSFUL:
-					color.Green("Signup was successful. You can now select a target and send messages")
-					break
+			case common.SIGNUP_SUCCESSFUL:
+				color.Green("Signup was successful. You can now select a target and send messages")
+				break
 
-				case common.CLIENTS_LIST:
-					color.Green(response.Message)
-					break
+			case common.CLIENTS_LIST:
+				color.Green(string(response.Message))
+				break
 
-				case common.TARGET_SET:
-					color.Green("Target user is set. Target public key saved.")
-					targetpubkey = response.Message
-					break
+			case common.TARGET_SET:
+				color.Green("Target user is set. Target public key saved.")
+				targetpubkey = response.Message
+				break
 
-				case common.TARGET_FAIL:
-					color.Red("Couldn't set the target.")
-					break
+			case common.TARGET_FAIL:
+				color.Red("Couldn't set the target.")
+				break
 
-				case common.SERVER_KEY_ACK:
-					encryptedACK := response.Message
-					decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
-					if common.SERVER_KEY_ACK == decryptedACK{
-						color.Green("Symmetric Key exchange successful")
-					}else{
-						color.Red("Symmetric Key exchange failed")
-					}
-					break
+			case common.SERVER_KEY_ACK:
+				encryptedACK := response.Message
+				decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
+				if common.SERVER_KEY_ACK == decryptedACK {
+					color.Green("Symmetric Key exchange successful")
+				} else {
+					color.Red("Symmetric Key exchange failed")
+				}
+				break
 
-				case common.TARGET_NOT_SET:
-					color.Red("Target user is not set. Please see instructions by inputting '~~'")
-					break
+			case common.TARGET_NOT_SET:
+				color.Red("Target user is not set. Please see instructions by inputting '~~'")
+				break
 
-				case common.NONE:
-					fmt.Println("Request tag did not match to any in server")
-					break
+			case common.NONE:
+				fmt.Println("Request tag did not match to any in server")
+				break
 
-				default:
-					fmt.Println("received unrecognised tag : "+response.ResTag+", message : "+response.Message)
-			}// response tag switch ends
+			default:
+				fmt.Println("received unrecognised tag : " + response.ResTag + ", message : " + string(response.Message))
+			} // response tag switch ends
 		}
-	}// infinite for ends
+	} // infinite for ends
 }
