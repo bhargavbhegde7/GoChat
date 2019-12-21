@@ -30,13 +30,21 @@ func sendResponse(conn net.Conn, response *common.Response) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Fprintf(conn, string(responseStr)+"\n")
+
+	_, err = fmt.Fprintf(conn, string(responseStr)+"\n")
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func requestHandler(client *Client) {
 
 	request := common.Request{}
-	json.Unmarshal([]byte(client.message), &request)
+
+	err := json.Unmarshal([]byte(client.message), &request)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	switch request.ReqTag {
 
@@ -76,7 +84,7 @@ func requestHandler(client *Client) {
 
 			if targetClient != nil {
 				pubkeyOfTargetClient := targetClient.pubKey
-				response := common.NewResponse(common.TARGET_SET, []byte(pubkeyOfTargetClient), common.NONE)
+				response := common.NewResponse(common.TARGET_SET, pubkeyOfTargetClient, common.NONE)
 				go sendResponse(client.conn, response)
 				//plus attach the public key to the json
 			} else {
@@ -200,7 +208,10 @@ func main() {
 		fmt.Printf("error opening file: %v", err)
 	}
 	defer func() {
-		f.Close()
+		err := f.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
 	}()
 
 	log.SetOutput(f)

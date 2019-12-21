@@ -14,7 +14,10 @@ func sendRequest(conn net.Conn, request *common.Request) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Fprintf(conn, string(reqStr)+"\n")
+	_, err = fmt.Fprintf(conn, string(reqStr)+"\n")
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func getClients(conn net.Conn) {
@@ -44,6 +47,7 @@ func login(conn net.Conn) {
 }
 
 func sendMessage(conn net.Conn, request *common.Request) {
+	request.Message = common.AsymmetricPublicKeyEncryption(targetpubkey, request.Message)
 	go sendRequest(conn, request)
 }
 

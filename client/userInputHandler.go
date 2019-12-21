@@ -37,6 +37,7 @@ func printInstructions() {
 func parseInput(input string, conn net.Conn) {
 	switch input {
 	case HELP:
+		fmt.Println("help ??%%" + input)
 		printInstructions()
 		break
 	case LOGIN:
@@ -53,6 +54,7 @@ func parseInput(input string, conn net.Conn) {
 		break
 	default:
 		// consider this as a message payload
+		fmt.Println("payload ??%%" + input)
 		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubKey, []byte(input))
 		sendMessage(conn, request)
 		break

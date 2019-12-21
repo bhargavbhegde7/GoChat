@@ -14,5 +14,6 @@ func channelSelector() {
 }
 
 func messageHandler(messageResponse common.Response) {
-	color.Yellow(messageResponse.Username + " : " + string(messageResponse.Message))
+	message := common.AsymmetricPrivateKeyDecryption(privKey, messageResponse.Message)
+	color.Yellow(messageResponse.Username + " : " + message)
 }
