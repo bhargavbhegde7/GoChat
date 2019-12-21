@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
+	"github.com/fatih/color"
 	"net"
 	"os"
 	"strings"
@@ -21,7 +22,6 @@ func startREPL(conn net.Conn) {
 			fmt.Println(err)
 		} else {
 			line = strings.TrimSuffix(line, "\n")
-			fmt.Println(line)
 			parseInput(line, conn)
 		}
 	} //infinite for loop ends
@@ -37,7 +37,6 @@ func printInstructions() {
 func parseInput(input string, conn net.Conn) {
 	switch input {
 	case HELP:
-		fmt.Println("help ??%%" + input)
 		printInstructions()
 		break
 	case LOGIN:
@@ -54,7 +53,10 @@ func parseInput(input string, conn net.Conn) {
 		break
 	default:
 		// consider this as a message payload
-		fmt.Println("payload ??%%" + input)
+		if targetpubkey == nil {
+			color.Red("Target client is not set")
+			break
+		}
 		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubKey, []byte(input))
 		sendMessage(conn, request)
 		break
