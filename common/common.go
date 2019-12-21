@@ -60,9 +60,6 @@ func InitRSA() ([]byte, []byte) {
 	pubKey := readTextFromFile(pub_fileName)
 	privKey := readTextFromFile(priv_fileName)
 
-	fmt.Println(pubKey)
-	fmt.Println(privKey)
-
 	return pubKey, privKey
 }
 

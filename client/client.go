@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 )
@@ -21,9 +20,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("connected to the server")
 
-	go channelSelector()
 	go listenToServer(conn)
 
 	//REPL

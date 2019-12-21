@@ -26,7 +26,7 @@ func listenToServer(conn net.Conn) {
 				break
 
 			case common.CLIENT_MESSAGE:
-				messageChannel <- response
+				go messageHandler(response)
 				break
 
 			case common.CONNECTION_SUCCESSFUL:
@@ -75,4 +75,9 @@ func listenToServer(conn net.Conn) {
 			} // response tag switch ends
 		}
 	} // infinite for ends
+}
+
+func messageHandler(messageResponse common.Response) {
+	message := common.AsymmetricPrivateKeyDecryption(privKey, messageResponse.Message)
+	color.Yellow(messageResponse.Username + " : " + message)
 }

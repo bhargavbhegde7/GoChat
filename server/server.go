@@ -165,20 +165,10 @@ func signup(client *Client, username string) error {
 }
 
 /**
-starts a go-routine that keeps listening to the channel 'clientChannel'.
-Whenever there is a new message by a client, that client is put into this channel by  'clientHandler' function.
-*/
-func messageListener(clientChannel chan *Client) {
-	for {
-		go requestHandler(<-clientChannel)
-	}
-}
-
-/**
 This is run for each client.
 When there is a new message by a client, that client is put into the 'clientChannel' along with a message attached to her.
 */
-func clientHandler(client *Client, clientChannel chan *Client) {
+func clientHandler(client *Client) {
 
 	response := common.NewResponse(common.CONNECTION_SUCCESSFUL, pubKey, common.NONE)
 	go sendResponse(client.conn, response)
@@ -195,7 +185,9 @@ func clientHandler(client *Client, clientChannel chan *Client) {
 		}
 
 		client.message = request
-		clientChannel <- client
+		//clientChannel <- client
+
+		go requestHandler(client)
 	}
 }
 
@@ -217,8 +209,6 @@ func main() {
 	log.SetOutput(f)
 	//--------------- log setup ------------------
 
-	clientChannel := make(chan *Client)
-	go messageListener(clientChannel)
 	count := 0
 
 	// returns a net.Listener object
@@ -239,6 +229,6 @@ func main() {
 		fmt.Println("Accepted connection.")
 
 		count++
-		go clientHandler(&Client{count, "", conn, "", "", []byte("")}, clientChannel)
+		go clientHandler(&Client{count, "", conn, "", "", []byte("")})
 	}
 }
