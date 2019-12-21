@@ -191,8 +191,45 @@ func clientHandler(client *Client, clientChannel chan *Client) {
 	}
 }
 
+func readTextFromFile(fileName string) string{
+	file, err := os.Open(fileName)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
+
+	fileinfo, err := file.Stat()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	filesize := fileinfo.Size()
+	buffer := make([]byte, filesize)
+
+	_, err = file.Read(buffer)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	result := string(buffer)
+
+	return result
+}
+
+func initRSA() {
+	pub_fileName := "pub_key"
+	priv_fileName := "priv_key"
+
+	pubKey = readTextFromFile(pub_fileName)
+	privKey = readTextFromFile(priv_fileName)
+
+	fmt.Println(pubKey)
+	fmt.Println(privKey)
+}
+
 func main() {
 	fmt.Println("Server is ready.")
+	initRSA()
 	//--------------- log setup ------------------
 	f, err := os.OpenFile("server_logs", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {

@@ -1,6 +1,9 @@
 package common
 
-import "math/rand"
+import (
+	"crypto/rand"
+	"math/rand"
+)
 
 //usernames in both request and response indicate who the message is from
 
@@ -18,7 +21,7 @@ type Request struct {
 }
 
 func GenerateRandomKey() string {
-	return RandomString(10)
+	return RandomString(32)
 }
 
 func RandomString(n int) string {
