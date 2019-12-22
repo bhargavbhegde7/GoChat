@@ -15,13 +15,11 @@ func startREPL(conn net.Conn) {
 	in := bufio.NewReader(os.Stdin)
 
 	for {
-		fmt.Printf("\n>>")
-
 		line, err := in.ReadString('\n')
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			line = strings.TrimSuffix(line, "\n")
+			line = strings.TrimRight(line, "\r\n")
 			parseInput(line, conn)
 		}
 	} //infinite for loop ends
@@ -35,6 +33,7 @@ func printInstructions() {
 }
 
 func parseInput(input string, conn net.Conn) {
+	fmt.Println("input : "+">>>"+input+"<<<")
 	switch input {
 	case HELP:
 		printInstructions()

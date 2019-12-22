@@ -192,7 +192,6 @@ func clientHandler(client *Client) {
 }
 
 func main() {
-	fmt.Println("Server is ready.")
 	pubKey, privKey = common.InitRSA()
 	//--------------- log setup ------------------
 	f, err := os.OpenFile("server_logs", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)

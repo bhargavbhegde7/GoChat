@@ -1,0 +1,7 @@
+[package]
+name = "gui"
+version = "0.1.0"
+authors = ["= <=>"]
+
+[dependencies]
+azul = { git = "https://github.com/maps4print/azul" }
