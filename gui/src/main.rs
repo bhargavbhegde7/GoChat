@@ -1,17 +1,37 @@
-extern crate azul;
+extern crate rand;
 
-use azul::prelude::*;
-
-struct MyDataModel { }
-
-impl Layout for MyDataModel {
-    fn layout(&self, _: LayoutInfo<Self>) -> Dom<Self> {
-        Dom::div()
-    }
-}
+use std::io;
+use rand::Rng;
+use std::cmp::Ordering;
 
 fn main() {
-    let mut app = App::new(MyDataModel { }, AppConfig::default()).unwrap();
-    let window = app.create_window(WindowCreateOptions::default(), css::native()).unwrap();
-    app.run(window).unwrap();
+    println!("Guess the number!");
+    let secret_number = rand::thread_rng().gen_range(1, 101);
+
+    println!("The secret number is: {}", secret_number);
+    loop {
+
+        println!("Please input your guess.");
+
+        let mut guess = String::new();
+
+        io::stdin().read_line(&mut guess)
+            .expect("Failed to read line");
+
+        let guess: u32 = match guess.trim().parse(){
+            Ok(num) => num,
+            Err(err123) => {
+                println!("Please input a number");
+                continue;
+            },
+        };
+
+        println!("You guessed: {}", guess);
+
+        match guess.cmp(&secret_number) {
+            Ordering::Less => {println!("Too small!");},
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {println!("You win!");break;},
+        }
+    }// loop ends here
 }

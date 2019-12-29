@@ -5,3 +5,4 @@ authors = ["= <=>"]
 
 [dependencies]
 azul = { git = "https://github.com/maps4print/azul" }
+rand = "0.6.0"

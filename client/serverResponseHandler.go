@@ -57,6 +57,9 @@ func listenToServer(conn net.Conn) {
 				decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
 				if common.SERVER_KEY_ACK == decryptedACK {
 					color.Green("Symmetric Key exchange successful")
+					//TODO send a ready message to the server so that server can understand to look for an encrypted message from now on.
+					//TODO also maintain a flag in the client side that will indicate if the secure pipeline is up or not.
+					//Reject all requests if this flag is not set. This should happen both on client as well as server.
 				} else {
 					color.Red("Symmetric Key exchange failed")
 				}

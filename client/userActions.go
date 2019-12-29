@@ -8,8 +8,21 @@ import (
 	"strings"
 )
 
-func sendRequest(conn net.Conn, request *common.Request) {
+func sendPlainTextRequest(conn net.Conn, request *common.Request) {
 	reqStr, err := json.Marshal(request)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	_, err = fmt.Fprintf(conn, string(reqStr)+"\n")
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func sendSymmetricEncryptedRequest(conn net.Conn, request *common.Request) {
+	reqStr, err := json.Marshal(request)
+
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -22,7 +35,7 @@ func sendRequest(conn net.Conn, request *common.Request) {
 
 func getClients(conn net.Conn) {
 	request := common.NewRequest(common.GET_CLIENTS, username, pubKey, []byte(common.NONE))
-	go sendRequest(conn, request)
+	go sendPlainTextRequest(conn, request)
 }
 
 func selectTarget(conn net.Conn) {
@@ -35,7 +48,7 @@ func selectTarget(conn net.Conn) {
 	} else {
 		if strings.TrimSpace(username) != "" {
 			request := common.NewRequest(common.SELECT_TARGET, username, pubKey, []byte(common.NONE))
-			go sendRequest(conn, request)
+			go sendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
@@ -48,7 +61,7 @@ func login(conn net.Conn) {
 
 func sendMessage(conn net.Conn, request *common.Request) {
 	request.Message = common.AsymmetricPublicKeyEncryption(targetpubkey, request.Message)
-	go sendRequest(conn, request)
+	go sendPlainTextRequest(conn, request)
 }
 
 func signup(conn net.Conn) {
@@ -63,7 +76,7 @@ func signup(conn net.Conn) {
 			//pubkey = "abcdef" + "-" + username
 
 			request := common.NewRequest(common.SIGNUP, username, pubKey, []byte(common.NONE))
-			go sendRequest(conn, request)
+			go sendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
@@ -75,5 +88,5 @@ func initServerKeyExchange(conn net.Conn) {
 	encryptedKey := common.AsymmetricPublicKeyEncryption(serverPubKey, serverKey)
 
 	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubKey, encryptedKey)
-	go sendRequest(conn, request)
+	go sendPlainTextRequest(conn, request)
 }
