@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
+	"os"
 )
 
 var targetpubkey []byte
@@ -14,7 +15,13 @@ var privKey []byte
 
 func main() {
 
-	pubKey, privKey = common.InitRSA()
+	//argsWithProg := os.Args
+	argsWithoutProg := os.Args[1:]
+
+	pubKeyFilePath := argsWithoutProg[0]
+	privKeyFilePath := argsWithoutProg[1]
+
+	pubKey, privKey = common.InitRSA(pubKeyFilePath, privKeyFilePath)
 
 	conn, err := net.Dial("tcp", "127.0.0.1:8080")
 	if err != nil {

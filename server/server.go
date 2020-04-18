@@ -192,7 +192,14 @@ func clientHandler(client *Client) {
 }
 
 func main() {
-	pubKey, privKey = common.InitRSA()
+
+	//argsWithProg := os.Args
+	argsWithoutProg := os.Args[1:]
+
+	pubKeyFilePath := argsWithoutProg[0]
+	privKeyFilePath := argsWithoutProg[1]
+
+	pubKey, privKey = common.InitRSA(pubKeyFilePath, privKeyFilePath)
 	//--------------- log setup ------------------
 	f, err := os.OpenFile("server_logs", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
