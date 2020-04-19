@@ -30,7 +30,7 @@ func main() {
 	clientProcess.Wait()
 	fmt.Println("END") //for debug*/
 
-	serverProcess := exec.Command("go", "run", "server/server.go")
+	serverProcess := exec.Command("go", "run", "server/server.go", "server/pub_key", "server/priv_key")
 
 	serverProcess.Stdout = os.Stdout
 	serverProcess.Stderr = os.Stderr

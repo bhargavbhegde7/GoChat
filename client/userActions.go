@@ -40,7 +40,7 @@ func getClients(conn net.Conn) {
 
 func selectTarget(conn net.Conn) {
 	var username string
-	fmt.Printf("\ntarget username >>")
+	fmt.Printf("target username >>\n")
 	_, err := fmt.Scanf("%s\n", &username)
 
 	if err != nil {
@@ -66,7 +66,7 @@ func sendMessage(conn net.Conn, request *common.Request) {
 
 func signup(conn net.Conn) {
 
-	fmt.Printf("\nusername >>")
+	fmt.Printf("username >>\n")
 	_, err := fmt.Scanf("%s\n", &username)
 
 	if err != nil {

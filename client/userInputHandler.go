@@ -33,7 +33,7 @@ func printInstructions() {
 }
 
 func parseInput(input string, conn net.Conn) {
-	fmt.Println("input : "+">>>"+input+"<<<")
+	//fmt.Println("input : "+">>>"+input+"<<<")
 	switch input {
 	case HELP:
 		printInstructions()
