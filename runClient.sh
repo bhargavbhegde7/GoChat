@@ -1,8 +1,8 @@
 #!/usr/bin/expect -f
- 
+
 set timeout -1
- 
-spawn ./client /home/bhegde/go/src/GoChat/client/pub_key /home/bhegde/go/src/GoChat/client/priv_key
+
+spawn ./client/client /home/bhegde/go/src/GoChat/client/pub_key /home/bhegde/go/src/GoChat/client/priv_key
  
 expect "Symmetric Key exchange successful\r"
  
@@ -30,4 +30,5 @@ send "hello, world\r"
 
 expect "potter : hello\r"
  
+
 #expect eof
