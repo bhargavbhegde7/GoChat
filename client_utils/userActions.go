@@ -1,6 +1,7 @@
-package main
+package client_utils
 
 import (
+	"GoChat/client"
 	"encoding/json"
 	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
@@ -34,7 +35,7 @@ func sendSymmetricEncryptedRequest(conn net.Conn, request *common.Request) {
 }
 
 func getClients(conn net.Conn) {
-	request := common.NewRequest(common.GET_CLIENTS, username, pubKey, []byte(common.NONE))
+	request := common.NewRequest(common.GET_CLIENTS, main.username, main.pubKey, []byte(common.NONE))
 	go sendPlainTextRequest(conn, request)
 }
 
@@ -47,7 +48,7 @@ func selectTarget(conn net.Conn) {
 		fmt.Println("error getting target username input")
 	} else {
 		if strings.TrimSpace(username) != "" {
-			request := common.NewRequest(common.SELECT_TARGET, username, pubKey, []byte(common.NONE))
+			request := common.NewRequest(common.SELECT_TARGET, username, main.pubKey, []byte(common.NONE))
 			go sendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
@@ -60,22 +61,22 @@ func login(conn net.Conn) {
 }
 
 func sendMessage(conn net.Conn, request *common.Request) {
-	request.Message = common.AsymmetricPublicKeyEncryption(targetpubkey, request.Message)
+	request.Message = common.AsymmetricPublicKeyEncryption(main.targetpubkey, request.Message)
 	go sendPlainTextRequest(conn, request)
 }
 
 func signup(conn net.Conn) {
 
 	fmt.Printf("username >>\n")
-	_, err := fmt.Scanf("%s\n", &username)
+	_, err := fmt.Scanf("%s\n", &main.username)
 
 	if err != nil {
 		fmt.Println("error getting username input")
 	} else {
-		if strings.TrimSpace(username) != "" {
+		if strings.TrimSpace(main.username) != "" {
 			//pubkey = "abcdef" + "-" + username
 
-			request := common.NewRequest(common.SIGNUP, username, pubKey, []byte(common.NONE))
+			request := common.NewRequest(common.SIGNUP, main.username, main.pubKey, []byte(common.NONE))
 			go sendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
@@ -84,9 +85,9 @@ func signup(conn net.Conn) {
 }
 
 func initServerKeyExchange(conn net.Conn) {
-	serverKey = common.GenerateRandomKey()
-	encryptedKey := common.AsymmetricPublicKeyEncryption(serverPubKey, serverKey)
+	main.serverKey = common.GenerateRandomKey()
+	encryptedKey := common.AsymmetricPublicKeyEncryption(main.serverPubKey, main.serverKey)
 
-	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, pubKey, encryptedKey)
+	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, main.username, main.pubKey, encryptedKey)
 	go sendPlainTextRequest(conn, request)
 }

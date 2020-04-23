@@ -1,25 +1,28 @@
 package main
 
 import (
-	"os/exec"
+	"fmt"
+	"github.com/bhargavbhegde7/GoChat/client_utils"
+	"net"
 )
 
 func main() {
-	//exec.Command("go", "build", "-o", "/home/bhegde/go/src/GoChat/client/abcd", "/home/bhegde/go/src/GoChat/client/")
-	exec.Command("echo", "'build'", ">", "/home/bhegde/go/src/GoChat/client/abcd")
 
-	/*serverProcess := exec.Command("./client/abcd", "client/pub_key", "client/priv_key")
+	items := []net.Conn{}
 
-	serverProcess.Stdout = os.Stdout
-	serverProcess.Stderr = os.Stderr
+	for i := 0; i < 10; i++ {
+		conn, err := net.Dial("tcp", "127.0.0.1:8080")
+		if err != nil {
+			panic(err)
+		}
+		go listenToServer(conn)
 
-	fmt.Println("SERVER TEST START") //for debug
+		//common.AsymmetricPrivateKeyDecryption([]byte("ABC€"), []byte("ABC€"))
 
-	err := serverProcess.Start()
-	if err != nil { //Use start, not run
-		fmt.Println("An error occured in server: ", err) //replace with logger, or anything you want
+		items = append(items, conn)
 	}
 
-	serverProcess.Wait()
-	fmt.Println("END") //for debug*/
+	//use parse input method to user input
+
+	fmt.Println("Hello")
 }

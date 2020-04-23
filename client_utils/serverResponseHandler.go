@@ -1,6 +1,7 @@
-package main
+package client_utils
 
 import (
+	"GoChat/client"
 	"bufio"
 	"encoding/json"
 	"fmt"
@@ -31,7 +32,7 @@ func listenToServer(conn net.Conn) {
 
 			case common.CONNECTION_SUCCESSFUL:
 				color.Green("Connected to server")
-				serverPubKey = response.Message
+				main.serverPubKey = response.Message
 				initServerKeyExchange(conn)
 				break
 
@@ -45,7 +46,7 @@ func listenToServer(conn net.Conn) {
 
 			case common.TARGET_SET:
 				color.Green("Target user is set. Target public key saved.")
-				targetpubkey = response.Message
+				main.targetpubkey = response.Message
 				break
 
 			case common.TARGET_FAIL:
@@ -54,7 +55,7 @@ func listenToServer(conn net.Conn) {
 
 			case common.SERVER_KEY_ACK:
 				encryptedACK := response.Message
-				decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
+				decryptedACK := common.SymmetricDecryption(main.serverKey, encryptedACK)
 				if common.SERVER_KEY_ACK == decryptedACK {
 					color.Green("Symmetric Key exchange successful")
 					//TODO send a ready message to the server so that server can understand to look for an encrypted message from now on.
@@ -81,6 +82,6 @@ func listenToServer(conn net.Conn) {
 }
 
 func messageHandler(messageResponse common.Response) {
-	message := common.AsymmetricPrivateKeyDecryption(privKey, messageResponse.Message)
+	message := common.AsymmetricPrivateKeyDecryption(main.privKey, messageResponse.Message)
 	color.Yellow(messageResponse.Username + " : " + message)
 }

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"GoChat/client_utils"
+	"github.com/bhargavbhegde7/GoChat/client_utils"
 	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"os"
@@ -15,7 +17,6 @@ var privKey []byte
 
 func main() {
 
-	//argsWithProg := os.Args
 	argsWithoutProg := os.Args[1:]
 
 	pubKeyFilePath := argsWithoutProg[0]
@@ -28,8 +29,8 @@ func main() {
 		panic(err)
 	}
 
-	go listenToServer(conn)
+	go client_utils.listenToServer(conn)
 
 	//REPL
-	startREPL(conn)
+	client_utils.startREPL(conn)
 }

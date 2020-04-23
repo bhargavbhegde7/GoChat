@@ -1,6 +1,7 @@
-package main
+package client_utils
 
 import (
+	"GoChat/client"
 	"bufio"
 	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
@@ -52,11 +53,11 @@ func parseInput(input string, conn net.Conn) {
 		break
 	default:
 		// consider this as a message payload
-		if targetpubkey == nil {
+		if main.targetpubkey == nil {
 			color.Red("Target client is not set")
 			break
 		}
-		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubKey, []byte(input))
+		request := common.NewRequest(common.CLIENT_MESSAGE, main.username, main.pubKey, []byte(input))
 		sendMessage(conn, request)
 		break
 	}

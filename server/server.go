@@ -193,7 +193,6 @@ func clientHandler(client *Client) {
 
 func main() {
 
-	//argsWithProg := os.Args
 	argsWithoutProg := os.Args[1:]
 
 	pubKeyFilePath := argsWithoutProg[0]
