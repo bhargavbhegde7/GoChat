@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func sendPlainTextRequest(conn net.Conn, request *common.Request) {
+func SendPlainTextRequest(conn net.Conn, request *common.Request) {
 	reqStr, err := json.Marshal(request)
 	if err != nil {
 		fmt.Println(err)
@@ -35,7 +35,7 @@ func sendSymmetricEncryptedRequest(conn net.Conn, request *common.Request) {
 
 func getClients(conn net.Conn) {
 	request := common.NewRequest(common.GET_CLIENTS, username, PubKey, []byte(common.NONE))
-	go sendPlainTextRequest(conn, request)
+	go SendPlainTextRequest(conn, request)
 }
 
 func selectTarget(conn net.Conn) {
@@ -48,7 +48,7 @@ func selectTarget(conn net.Conn) {
 	} else {
 		if strings.TrimSpace(username) != "" {
 			request := common.NewRequest(common.SELECT_TARGET, username, PubKey, []byte(common.NONE))
-			go sendPlainTextRequest(conn, request)
+			go SendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
@@ -61,7 +61,7 @@ func login(conn net.Conn) {
 
 func sendMessage(conn net.Conn, request *common.Request) {
 	request.Message = common.AsymmetricPublicKeyEncryption(targetpubkey, request.Message)
-	go sendPlainTextRequest(conn, request)
+	go SendPlainTextRequest(conn, request)
 }
 
 func signup(conn net.Conn) {
@@ -76,7 +76,7 @@ func signup(conn net.Conn) {
 			//pubkey = "abcdef" + "-" + username
 
 			request := common.NewRequest(common.SIGNUP, username, PubKey, []byte(common.NONE))
-			go sendPlainTextRequest(conn, request)
+			go SendPlainTextRequest(conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
@@ -88,5 +88,5 @@ func initServerKeyExchange(conn net.Conn) {
 	encryptedKey := common.AsymmetricPublicKeyEncryption(serverPubKey, serverKey)
 
 	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, PubKey, encryptedKey)
-	go sendPlainTextRequest(conn, request)
+	go SendPlainTextRequest(conn, request)
 }
