@@ -10,5 +10,5 @@ var targetpubkey []byte
 var username string
 var serverPubKey []byte
 var serverKey []byte
-var pubKey []byte
-var privKey []byte
+var PubKey []byte
+var PrivKey []byte

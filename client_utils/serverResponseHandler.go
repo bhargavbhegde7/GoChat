@@ -1,10 +1,10 @@
 package client_utils
 
 import (
+	"GoChat/common"
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/bhargavbhegde7/GoChat/common"
 	"github.com/fatih/color"
 	"net"
 )
@@ -81,6 +81,6 @@ func ListenToServer(conn net.Conn) {
 }
 
 func messageHandler(messageResponse common.Response) {
-	message := common.AsymmetricPrivateKeyDecryption(privKey, messageResponse.Message)
+	message := common.AsymmetricPrivateKeyDecryption(PrivKey, messageResponse.Message)
 	color.Yellow(messageResponse.Username + " : " + message)
 }

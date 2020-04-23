@@ -53,12 +53,10 @@ func readTextFromFile(fileName string) []byte {
 	return buffer
 }
 
-func InitRSA() ([]byte, []byte) {
-	pub_fileName := "pub_key"
-	priv_fileName := "priv_key"
+func InitRSA(pubFilename string, privFilename string) ([]byte, []byte) {
 
-	pubKey := readTextFromFile(pub_fileName)
-	privKey := readTextFromFile(priv_fileName)
+	pubKey := readTextFromFile(pubFilename)
+	privKey := readTextFromFile(privFilename)
 
 	return pubKey, privKey
 }
