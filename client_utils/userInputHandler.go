@@ -1,7 +1,6 @@
 package client_utils
 
 import (
-	"GoChat/client"
 	"bufio"
 	"fmt"
 	"github.com/bhargavbhegde7/GoChat/common"
@@ -11,7 +10,7 @@ import (
 	"strings"
 )
 
-func startREPL(conn net.Conn) {
+func StartREPL(conn net.Conn) {
 	fmt.Println("enter '" + HELP + "' for instructions")
 	in := bufio.NewReader(os.Stdin)
 
@@ -53,11 +52,11 @@ func parseInput(input string, conn net.Conn) {
 		break
 	default:
 		// consider this as a message payload
-		if main.targetpubkey == nil {
+		if targetpubkey == nil {
 			color.Red("Target client is not set")
 			break
 		}
-		request := common.NewRequest(common.CLIENT_MESSAGE, main.username, main.pubKey, []byte(input))
+		request := common.NewRequest(common.CLIENT_MESSAGE, username, pubKey, []byte(input))
 		sendMessage(conn, request)
 		break
 	}

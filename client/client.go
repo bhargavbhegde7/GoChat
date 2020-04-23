@@ -1,19 +1,11 @@
 package main
 
 import (
-	"GoChat/client_utils"
 	"github.com/bhargavbhegde7/GoChat/client_utils"
 	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"os"
 )
-
-var targetpubkey []byte
-var username string
-var serverPubKey []byte
-var serverKey []byte
-var pubKey []byte
-var privKey []byte
 
 func main() {
 
@@ -29,8 +21,8 @@ func main() {
 		panic(err)
 	}
 
-	go client_utils.listenToServer(conn)
+	go client_utils.ListenToServer(conn)
 
 	//REPL
-	client_utils.startREPL(conn)
+	client_utils.StartREPL(conn)
 }
