@@ -12,11 +12,11 @@ func main() {
 
 	var clients []client_utils.Client
 
-	for i := 0; i < 1; i++ {
-		pubKeyFilePath := ""
-		privKeyFilePath := ""
+	for i := 0; i < 10; i++ {
+		pubKeyFilePath := "/home/bhegde/go/src/GoChat/client/pub_key"
+		privKeyFilePath := "/home/bhegde/go/src/GoChat/client/priv_key"
 
-		client := &client_utils.Client{Conn: nil, Targetpubkey: nil, Username: nil, ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
+		client := &client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 
 		client.PubKey, client.PrivKey = common.InitRSA(pubKeyFilePath, privKeyFilePath)
 
@@ -29,12 +29,12 @@ func main() {
 
 		go client_utils.ListenToServer(client)
 
-		clients = append(clients, client)
+		clients = append(clients, *client)
 	}
 
 	//use parse input method to user input
 
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 10; i++ {
 		signupRequest := common.NewRequest(common.SIGNUP, "user0"+strconv.Itoa(i), clients[i].PubKey, []byte(common.NONE))
 		client_utils.SendPlainTextRequest(clients[i].Conn, signupRequest)
 
@@ -42,7 +42,9 @@ func main() {
 		client_utils.SendPlainTextRequest(clients[i].Conn, selectTargetRequest)
 	}
 
-	//client_utils.ParseInput("hello", clients[0])
+	//client_utils.ParseInput("hello", &clients[0])
+
+	client_utils.StartREPL(&clients[0])
 
 	fmt.Println("Hello")
 }
