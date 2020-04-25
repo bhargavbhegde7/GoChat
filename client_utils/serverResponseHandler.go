@@ -6,13 +6,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/fatih/color"
-	"net"
 )
 
-func ListenToServer(conn net.Conn) {
+func ListenToServer(client *Client) {
 
+	//TODO add the message as and when it is received into a channel and process it in async way.
 	for {
-		serverMessage, err := bufio.NewReader(conn).ReadString('\n')
+		serverMessage, err := bufio.NewReader(client.Conn).ReadString('\n')
 		if err != nil {
 			panic(err)
 		} else {
@@ -26,13 +26,13 @@ func ListenToServer(conn net.Conn) {
 				break
 
 			case common.CLIENT_MESSAGE:
-				go messageHandler(response)
+				go messageHandler(response, client)
 				break
 
 			case common.CONNECTION_SUCCESSFUL:
 				color.Green("Connected to server")
-				serverPubKey = response.Message
-				initServerKeyExchange(conn)
+				client.ServerPubKey = response.Message
+				initServerKeyExchange(client)
 				break
 
 			case common.SIGNUP_SUCCESSFUL:
@@ -45,7 +45,7 @@ func ListenToServer(conn net.Conn) {
 
 			case common.TARGET_SET:
 				color.Green("Target user is set. Target public key saved.")
-				targetpubkey = response.Message
+				client.Targetpubkey = response.Message
 				break
 
 			case common.TARGET_FAIL:
@@ -54,7 +54,7 @@ func ListenToServer(conn net.Conn) {
 
 			case common.SERVER_KEY_ACK:
 				encryptedACK := response.Message
-				decryptedACK := common.SymmetricDecryption(serverKey, encryptedACK)
+				decryptedACK := common.SymmetricDecryption(client.ServerKey, encryptedACK)
 				if common.SERVER_KEY_ACK == decryptedACK {
 					color.Green("Symmetric Key exchange successful")
 					//TODO send a ready message to the server so that server can understand to look for an encrypted message from now on.
@@ -80,7 +80,7 @@ func ListenToServer(conn net.Conn) {
 	} // infinite for ends
 }
 
-func messageHandler(messageResponse common.Response) {
-	message := common.AsymmetricPrivateKeyDecryption(PrivKey, messageResponse.Message)
+func messageHandler(messageResponse common.Response, client *Client) {
+	message := common.AsymmetricPrivateKeyDecryption(client.PrivKey, messageResponse.Message)
 	color.Yellow(messageResponse.Username + " : " + message)
 }

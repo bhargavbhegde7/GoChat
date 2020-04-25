@@ -33,12 +33,12 @@ func sendSymmetricEncryptedRequest(conn net.Conn, request *common.Request) {
 	}
 }
 
-func getClients(conn net.Conn) {
-	request := common.NewRequest(common.GET_CLIENTS, username, PubKey, []byte(common.NONE))
-	go SendPlainTextRequest(conn, request)
+func getClients(client *Client) {
+	request := common.NewRequest(common.GET_CLIENTS, client.Username, client.PubKey, []byte(common.NONE))
+	go SendPlainTextRequest(client.Conn, request)
 }
 
-func selectTarget(conn net.Conn) {
+func selectTarget(client *Client) {
 	var username string
 	fmt.Printf("target username >>\n")
 	_, err := fmt.Scanf("%s\n", &username)
@@ -47,8 +47,8 @@ func selectTarget(conn net.Conn) {
 		fmt.Println("error getting target username input")
 	} else {
 		if strings.TrimSpace(username) != "" {
-			request := common.NewRequest(common.SELECT_TARGET, username, PubKey, []byte(common.NONE))
-			go SendPlainTextRequest(conn, request)
+			request := common.NewRequest(common.SELECT_TARGET, username, client.PubKey, []byte(common.NONE))
+			go SendPlainTextRequest(client.Conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
@@ -59,34 +59,34 @@ func login(conn net.Conn) {
 
 }
 
-func sendMessage(conn net.Conn, request *common.Request) {
-	request.Message = common.AsymmetricPublicKeyEncryption(targetpubkey, request.Message)
-	go SendPlainTextRequest(conn, request)
+func sendMessage(client *Client, request *common.Request) {
+	request.Message = common.AsymmetricPublicKeyEncryption(client.Targetpubkey, request.Message)
+	go SendPlainTextRequest(client.Conn, request)
 }
 
-func signup(conn net.Conn) {
+func signup(client *Client) {
 
 	fmt.Printf("username >>\n")
-	_, err := fmt.Scanf("%s\n", &username)
+	_, err := fmt.Scanf("%s\n", &client.Username)
 
 	if err != nil {
 		fmt.Println("error getting username input")
 	} else {
-		if strings.TrimSpace(username) != "" {
+		if strings.TrimSpace(client.Username) != "" {
 			//pubkey = "abcdef" + "-" + username
 
-			request := common.NewRequest(common.SIGNUP, username, PubKey, []byte(common.NONE))
-			go SendPlainTextRequest(conn, request)
+			request := common.NewRequest(common.SIGNUP, client.Username, client.PubKey, []byte(common.NONE))
+			go SendPlainTextRequest(client.Conn, request)
 		} else {
 			fmt.Println("\nerror in the username\n\n")
 		}
 	}
 }
 
-func initServerKeyExchange(conn net.Conn) {
-	serverKey = common.GenerateRandomKey()
-	encryptedKey := common.AsymmetricPublicKeyEncryption(serverPubKey, serverKey)
+func initServerKeyExchange(client *Client) {
+	client.ServerKey = common.GenerateRandomKey()
+	encryptedKey := common.AsymmetricPublicKeyEncryption(client.ServerPubKey, client.ServerKey)
 
-	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, username, PubKey, encryptedKey)
-	go SendPlainTextRequest(conn, request)
+	request := common.NewRequest(common.SERVER_KEY_EXCHANGE, client.Username, client.PubKey, encryptedKey)
+	go SendPlainTextRequest(client.Conn, request)
 }

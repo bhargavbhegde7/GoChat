@@ -5,12 +5,11 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/fatih/color"
-	"net"
 	"os"
 	"strings"
 )
 
-func StartREPL(conn net.Conn) {
+func StartREPL(client *Client) {
 	fmt.Println("enter '" + HELP + "' for instructions")
 	in := bufio.NewReader(os.Stdin)
 
@@ -20,7 +19,7 @@ func StartREPL(conn net.Conn) {
 			fmt.Println(err)
 		} else {
 			line = strings.TrimRight(line, "\r\n")
-			parseInput(line, conn)
+			ParseInput(line, client)
 		}
 	} //infinite for loop ends
 }
@@ -32,32 +31,32 @@ func printInstructions() {
 	fmt.Println("enter '" + SELECT + "' to select a user by username")
 }
 
-func parseInput(input string, conn net.Conn) {
+func ParseInput(input string, client *Client) {
 	//fmt.Println("input : "+">>>"+input+"<<<")
 	switch input {
 	case HELP:
 		printInstructions()
 		break
 	case LOGIN:
-		login(conn)
+		login(client.Conn)
 		break
 	case SIGNUP:
-		signup(conn)
+		signup(client)
 		break
 	case USERS:
-		getClients(conn)
+		getClients(client)
 		break
 	case SELECT:
-		selectTarget(conn)
+		selectTarget(client)
 		break
 	default:
 		// consider this as a message payload
-		if targetpubkey == nil {
+		if client.Targetpubkey == nil {
 			color.Red("Target client is not set")
 			break
 		}
-		request := common.NewRequest(common.CLIENT_MESSAGE, username, PubKey, []byte(input))
-		sendMessage(conn, request)
+		request := common.NewRequest(common.CLIENT_MESSAGE, client.Username, client.PubKey, []byte(input))
+		sendMessage(client, request)
 		break
 	}
 }
