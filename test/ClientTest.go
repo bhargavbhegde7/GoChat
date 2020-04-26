@@ -3,16 +3,18 @@ package main
 import (
 	"GoChat/client_utils"
 	"GoChat/common"
-	"fmt"
+	"bufio"
 	"net"
+	"os"
 	"strconv"
 )
 
 func main() {
 
 	var clients []client_utils.Client
+	size := 10
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < size; i++ {
 		pubKeyFilePath := "/home/bhegde/go/src/GoChat/client/pub_key"
 		privKeyFilePath := "/home/bhegde/go/src/GoChat/client/priv_key"
 
@@ -34,17 +36,22 @@ func main() {
 
 	//use parse input method to user input
 
-	for i := 0; i < 10; i++ {
+	//sign up all users
+	for i := 0; i < size; i++ {
 		signupRequest := common.NewRequest(common.SIGNUP, "user0"+strconv.Itoa(i), clients[i].PubKey, []byte(common.NONE))
 		client_utils.SendPlainTextRequest(clients[i].Conn, signupRequest)
+	}
 
-		selectTargetRequest := common.NewRequest(common.SELECT_TARGET, "user0"+strconv.Itoa(i), clients[i].PubKey, []byte(common.NONE))
+	//select target all users
+	for i := 0; i < size; i++ {
+		selectTargetRequest := common.NewRequest(common.SELECT_TARGET, "user0"+strconv.Itoa((i+1)%size), clients[i].PubKey, []byte(common.NONE))
 		client_utils.SendPlainTextRequest(clients[i].Conn, selectTargetRequest)
 	}
 
-	//client_utils.ParseInput("hello", &clients[0])
+	for i := 0; i < size; i++ {
+		client_utils.ParseInput("hello", &clients[i])
+	}
 
-	client_utils.StartREPL(&clients[0])
-
-	fmt.Println("Hello")
+	in := bufio.NewReader(os.Stdin)
+	in.ReadString('\n')
 }
