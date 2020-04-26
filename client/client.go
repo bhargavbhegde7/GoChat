@@ -14,7 +14,7 @@ func main() {
 	pubKeyFilePath := argsWithoutProg[0]
 	privKeyFilePath := argsWithoutProg[1]
 
-	client := &client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
+	client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 
 	client.PubKey, client.PrivKey = common.InitRSA(pubKeyFilePath, privKeyFilePath)
 
@@ -25,8 +25,8 @@ func main() {
 
 	client.Conn = conn
 
-	go client_utils.ListenToServer(client)
+	go client_utils.ListenToServer(&client)
 
 	//REPL
-	client_utils.StartREPL(client)
+	client_utils.StartREPL(&client)
 }

@@ -36,7 +36,7 @@ func ListenToServer(client *Client) {
 				break
 
 			case common.SIGNUP_SUCCESSFUL:
-				color.Green("Signup as" + client.Username + " was successful. You can now select a target and send messages")
+				color.Green("Signup as " + client.Username + " was successful. You can now select a target and send messages")
 				break
 
 			case common.CLIENTS_LIST:

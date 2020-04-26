@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/fatih/color"
 	"log"
 	"net"
 	"os"
@@ -76,6 +77,7 @@ func requestHandler(client *Client) {
 	case common.SELECT_TARGET:
 		err := setTarget(client, request.Username)
 		if err != nil {
+			color.Red("User " + client.username + " has failed to set target as " + request.Username)
 			response := common.NewResponse(common.TARGET_FAIL, []byte(common.NONE), common.NONE)
 			go sendResponse(client.conn, response)
 		} else {
@@ -83,11 +85,12 @@ func requestHandler(client *Client) {
 			targetClient := getClient(client.target)
 
 			if targetClient != nil {
+				color.Green("User " + client.username + " has set the target as " + targetClient.username)
 				pubkeyOfTargetClient := targetClient.pubKey
 				response := common.NewResponse(common.TARGET_SET, pubkeyOfTargetClient, common.NONE)
 				go sendResponse(client.conn, response)
-				//plus attach the public key to the json
 			} else {
+				color.Red("User " + client.username + " has failed to set target as " + request.Username)
 				response := common.NewResponse(common.TARGET_FAIL, []byte(common.NONE), common.NONE)
 				go sendResponse(client.conn, response)
 			}
