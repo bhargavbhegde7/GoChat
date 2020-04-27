@@ -1,11 +1,11 @@
 package main
 
 import (
-	"GoChat/common"
 	"bufio"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"github.com/fatih/color"
 	"log"
 	"net"

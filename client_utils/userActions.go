@@ -1,9 +1,9 @@
 package client_utils
 
 import (
-	"GoChat/common"
 	"encoding/json"
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"strings"
 )

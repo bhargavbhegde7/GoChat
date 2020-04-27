@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GoChat/client_utils"
-	"GoChat/common"
+	"github.com/bhargavbhegde7/GoChat/client_utils"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"os"
 )

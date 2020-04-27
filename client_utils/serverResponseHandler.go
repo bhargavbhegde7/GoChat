@@ -1,10 +1,10 @@
 package client_utils
 
 import (
-	"GoChat/common"
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"github.com/fatih/color"
 )
 
