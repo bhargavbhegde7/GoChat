@@ -1,4 +1,4 @@
-package com.gochat.client;
+package com.gochat.client.service;
 
 import java.awt.Button;
 import java.awt.Dialog;

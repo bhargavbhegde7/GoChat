@@ -1,4 +1,4 @@
-package com.gochat.client;
+package com.gochat.client.service;
 
 public class AppBuilder {
     public static void build(){

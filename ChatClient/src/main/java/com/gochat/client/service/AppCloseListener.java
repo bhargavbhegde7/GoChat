@@ -1,11 +1,11 @@
-package com.gochat.client;
+package com.gochat.client.service;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import static com.gochat.client.AwtUtils.enableComponents;
+import static com.gochat.client.service.AwtUtils.enableComponents;
 
 public class AppCloseListener extends WindowAdapter {
 

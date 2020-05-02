@@ -1,4 +1,4 @@
-package com.gochat.client;
+package com.gochat.client.service;
 
 import java.awt.Component;
 import java.awt.Container;
