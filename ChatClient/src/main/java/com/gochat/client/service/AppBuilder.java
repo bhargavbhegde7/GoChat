@@ -13,10 +13,7 @@ public class AppBuilder {
     MainAppFrame mainAppFrame;
 
     public void build(){
-        //MainAppFrame mainAppFrame = new MainAppFrame("Secure Messenger");
-
         mainAppFrame.add(homePanel);
-
         mainAppFrame.setVisible(true);
     }
 }

@@ -1,16 +1,13 @@
 package com.gochat.client.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.JFrame;
 
 import static com.gochat.client.service.AwtUtils.enableComponents;
 
@@ -43,12 +40,7 @@ public class AppCloseListener extends WindowAdapter {
 				parentFrame.dispose();
 
 				// do something
-				int exitCode = SpringApplication.exit(configurableApplicationContext, new ExitCodeGenerator() {
-					@Override
-					public int getExitCode() {
-						return 0;
-					}
-				});
+				int exitCode = SpringApplication.exit(configurableApplicationContext, () -> 0);
 
 				System.exit(exitCode);
 
