@@ -2,3 +2,5 @@
 workspace.xml
 *.iml
 .idea/*
+ChatClient/.idea/*
+ChatClient/target/
