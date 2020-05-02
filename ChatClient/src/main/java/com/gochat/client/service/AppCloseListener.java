@@ -44,7 +44,6 @@ public class AppCloseListener extends WindowAdapter {
 
 				System.exit(exitCode);
 
-
 			});
 			booleanPrompt.getNegativeButton().addActionListener(actionEvent -> {
 				booleanPrompt.dispose();
