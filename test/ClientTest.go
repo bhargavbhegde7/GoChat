@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoChat/client_utils"
-	"GoChat/common"
 	"bufio"
+	"github.com/bhargavbhegde7/GoChat/client_utils"
+	"github.com/bhargavbhegde7/GoChat/common"
 	"net"
 	"os"
 	"strconv"
@@ -16,9 +16,9 @@ func main() {
 	size := 50
 	duration := time.Duration(5)
 
-	for i := 0; i < size; i++ {
-		pubKeyFilePath := "/home/bhegde/go/src/GoChat/client/pub_key"
-		privKeyFilePath := "/home/bhegde/go/src/GoChat/client/priv_key"
+	for i := 0; i < 10; i++ {
+		pubKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
+		privKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
 
 		client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 
