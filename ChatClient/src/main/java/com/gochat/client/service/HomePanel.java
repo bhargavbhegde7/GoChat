@@ -1,22 +1,28 @@
 package com.gochat.client.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.awt.GridLayout;
 
+import javax.annotation.PostConstruct;
 import javax.swing.JPanel;
 
+@Component
 public class HomePanel extends JPanel {
-	public HomePanel() {
-		init();
-	}
 
-	private void init(){
+	@Autowired
+	UserListPanel userListPanel;
+
+	@Autowired
+	ChatPanel chatPanel;
+
+	@PostConstruct
+	public void init(){
 		int rows = 1, columns = 2;
 		this.setLayout(new GridLayout(rows, columns));
 
-		UserListPanel usersPanel = new UserListPanel();
-		ChatPanel chatPanel = new ChatPanel();
-
-		this.add(usersPanel);
+		this.add(userListPanel);
 		this.add(chatPanel);
 	}
 }

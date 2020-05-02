@@ -1,24 +1,25 @@
 package com.gochat.client.service;
 
-import java.awt.HeadlessException;
-import java.awt.event.WindowListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.swing.JFrame;
+import javax.annotation.PostConstruct;
+import javax.swing.*;
 
+@Component
 public class MainAppFrame extends JFrame {
 
-	public MainAppFrame(String title) throws HeadlessException {
-		super(title);
-		init();
-	}
+	@Autowired
+	AppCloseListener appCloseListener;
 
+	@PostConstruct
 	public void init(){
 		this.setSize(1000,600);
 
 		//blocking default behavior since we want to inject our own behavior when close button is clicked.
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-		WindowListener closeListener = new AppCloseListener(this);
-		this.addWindowListener(closeListener);
+		appCloseListener.setParentFrame(this);
+		this.addWindowListener(appCloseListener);
 	}
 }

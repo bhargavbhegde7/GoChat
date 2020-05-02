@@ -1,5 +1,12 @@
 package com.gochat.client.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeGenerator;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
+
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -7,11 +14,15 @@ import javax.swing.JFrame;
 
 import static com.gochat.client.service.AwtUtils.enableComponents;
 
+@Component
 public class AppCloseListener extends WindowAdapter {
+
+	@Autowired
+	ConfigurableApplicationContext configurableApplicationContext;
 
 	private JFrame parentFrame;
 
-	public AppCloseListener(JFrame parentFrame) {
+	public void setParentFrame(JFrame parentFrame) {
 		this.parentFrame = parentFrame;
 	}
 
@@ -28,7 +39,21 @@ public class AppCloseListener extends WindowAdapter {
 			enableComponents(parentFrame.getContentPane(), false);
 
 			BooleanPrompt booleanPrompt = new BooleanPrompt(parentFrame, "Confirm Exit", "Are you sure you want to exit?", "Yes", "No");
-			booleanPrompt.getPositiveButton().addActionListener(actionEvent -> parentFrame.dispose());
+			booleanPrompt.getPositiveButton().addActionListener(actionEvent -> {
+				parentFrame.dispose();
+
+				// do something
+				int exitCode = SpringApplication.exit(configurableApplicationContext, new ExitCodeGenerator() {
+					@Override
+					public int getExitCode() {
+						return 0;
+					}
+				});
+
+				System.exit(exitCode);
+
+
+			});
 			booleanPrompt.getNegativeButton().addActionListener(actionEvent -> {
 				booleanPrompt.dispose();
 

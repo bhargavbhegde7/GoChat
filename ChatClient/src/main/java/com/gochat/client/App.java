@@ -36,7 +36,7 @@ public class App {
 			e.printStackTrace();
 		}
 
-		SwingUtilities.invokeLater(AppBuilder::build);
+		SwingUtilities.invokeLater(()->ctx.getBean(AppBuilder.class).build());
 
 	}
 }

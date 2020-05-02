@@ -1,10 +1,21 @@
 package com.gochat.client.service;
 
-public class AppBuilder {
-    public static void build(){
-        MainAppFrame mainAppFrame = new MainAppFrame("Secure Messenger");
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-        mainAppFrame.add(new HomePanel());
+@Component
+public class AppBuilder {
+
+    @Autowired
+    HomePanel homePanel;
+
+    @Autowired
+    MainAppFrame mainAppFrame;
+
+    public void build(){
+        //MainAppFrame mainAppFrame = new MainAppFrame("Secure Messenger");
+
+        mainAppFrame.add(homePanel);
 
         mainAppFrame.setVisible(true);
     }

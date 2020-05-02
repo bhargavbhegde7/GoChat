@@ -1,18 +1,19 @@
 package com.gochat.client.service;
 
+import org.springframework.stereotype.Component;
+
 import java.awt.GridBagLayout;
 import java.awt.List;
 
+import javax.annotation.PostConstruct;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+@Component
 public class UserListPanel extends JPanel {
 
-	public UserListPanel() {
-		init();
-	}
-
-	private void init(){
+	@PostConstruct
+	public void init(){
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createTitledBorder("Users"));
 		List l1=new List(5);
