@@ -1,10 +1,6 @@
 package com.gochat.client.service;
 
-import java.awt.Button;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Label;
+import java.awt.*;
 
 /**
  * This class gives a dialog with two configurable buttons, meant for positive and negative response
