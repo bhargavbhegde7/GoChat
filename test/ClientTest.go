@@ -16,7 +16,7 @@ func main() {
 	size := 50
 	duration := time.Duration(5)
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < size; i++ {
 		pubKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
 		privKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
 
