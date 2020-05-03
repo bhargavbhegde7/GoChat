@@ -35,7 +35,6 @@ public class ServerListenerTask implements Runnable {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                System.out.println(line);
             }
         }catch (Exception e){
             e.printStackTrace();

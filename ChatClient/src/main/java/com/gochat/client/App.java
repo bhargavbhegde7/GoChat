@@ -1,6 +1,7 @@
 package com.gochat.client;
 
-import com.gochat.client.service.AppBuilder;
+import com.gochat.client.service.CustomThreadFactory;
+import com.gochat.client.service.UIBuilder;
 import com.gochat.client.service.ServerListenerTask;
 import com.gochat.client.service.ServerMessageConsumer;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -22,21 +23,24 @@ public class App {
 
 		try {
 			LinkedBlockingDeque<String> serverMessageBuffer = new LinkedBlockingDeque<>(100);
-			ExecutorService executorService = Executors.newFixedThreadPool(2);
 
 			ServerListenerTask serverListenerTask = ctx.getBean(ServerListenerTask.class, serverMessageBuffer);
 			ServerMessageConsumer serverMessageConsumer = ctx.getBean(ServerMessageConsumer.class, serverMessageBuffer);
 
-			executorService.submit(serverListenerTask);
-			executorService.submit(serverMessageConsumer);
+			ExecutorService serverListenerExecutor = Executors.newSingleThreadExecutor(new CustomThreadFactory("Server Listener Task"));
+			ExecutorService serverMsgConsumerExecutor = Executors.newSingleThreadExecutor(new CustomThreadFactory("Server Message Consumer"));
 
-			executorService.shutdown();
+			serverListenerExecutor.submit(serverListenerTask);
+			serverMsgConsumerExecutor.submit(serverMessageConsumer);
+
+			serverListenerExecutor.shutdown();
+			serverMsgConsumerExecutor.shutdown();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		SwingUtilities.invokeLater(()->ctx.getBean(AppBuilder.class).build());
+		SwingUtilities.invokeLater(()->ctx.getBean(UIBuilder.class).build());
 
 	}
 }
