@@ -1,21 +1,21 @@
 package com.gochat.client;
 
-import com.gochat.client.service.CustomThreadFactory;
-import com.gochat.client.service.UIBuilder;
-import com.gochat.client.service.ServerListenerTask;
-import com.gochat.client.service.ServerMessageConsumer;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
-
-import javax.swing.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.swing.SwingUtilities;
+
+import com.gochat.client.service.CustomThreadFactory;
+import com.gochat.client.service.ServerListenerTask;
+import com.gochat.client.service.ServerMessageConsumer;
+import com.gochat.client.service.UIBuilder;
+
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+
 @SpringBootApplication
-@EnableAutoConfiguration
 public class App {
 	public static void main(String[] args) {
 
