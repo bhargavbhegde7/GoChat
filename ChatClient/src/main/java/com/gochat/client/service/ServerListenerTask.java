@@ -1,16 +1,11 @@
 package com.gochat.client.service;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.LinkedBlockingDeque;
 
-@Component
-@Scope(value = "prototype")
 public class ServerListenerTask implements Runnable {
 
     private LinkedBlockingDeque<String> serverMessageQueue;
@@ -28,7 +23,7 @@ public class ServerListenerTask implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 
             while(true){
-                String line = null;
+                String line;
                 try {
                     line = reader.readLine();
                     serverMessageQueue.put(line);

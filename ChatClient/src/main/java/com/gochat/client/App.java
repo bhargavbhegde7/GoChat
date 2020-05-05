@@ -6,6 +6,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import javax.swing.SwingUtilities;
 
+import com.gochat.client.service.Client;
 import com.gochat.client.service.CustomThreadFactory;
 import com.gochat.client.service.ServerListenerTask;
 import com.gochat.client.service.ServerMessageConsumer;
@@ -21,11 +22,18 @@ public class App {
 
 		ConfigurableApplicationContext ctx = new SpringApplicationBuilder(App.class).headless(false).run(args);
 
+		startListeningToServer();
+
+		SwingUtilities.invokeLater(()->ctx.getBean(UIBuilder.class).build());
+
+	}
+
+	private static void startListeningToServer(){
 		try {
 			LinkedBlockingDeque<String> serverMessageBuffer = new LinkedBlockingDeque<>(100);
 
-			ServerListenerTask serverListenerTask = ctx.getBean(ServerListenerTask.class, serverMessageBuffer);
-			ServerMessageConsumer serverMessageConsumer = ctx.getBean(ServerMessageConsumer.class, serverMessageBuffer);
+			ServerListenerTask serverListenerTask = new ServerListenerTask(serverMessageBuffer);
+			ServerMessageConsumer serverMessageConsumer = new ServerMessageConsumer(serverMessageBuffer, new Client());
 
 			ExecutorService serverListenerExecutor = Executors.newSingleThreadExecutor(new CustomThreadFactory("Server Listener Task"));
 			ExecutorService serverMsgConsumerExecutor = Executors.newSingleThreadExecutor(new CustomThreadFactory("Server Message Consumer"));
@@ -39,8 +47,5 @@ public class App {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		SwingUtilities.invokeLater(()->ctx.getBean(UIBuilder.class).build());
-
 	}
 }
