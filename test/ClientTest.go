@@ -58,7 +58,7 @@ func main() {
 	}
 
 	//TODO use wait groups instead of waiting with sleep till target selection is over.
-	time.Sleep(4 * time.Second)
+	time.Sleep(duration * time.Second)
 
 	//make every client send out a message to its target
 	for i := 0; i < size; i++ {
