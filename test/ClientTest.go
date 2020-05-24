@@ -16,6 +16,7 @@ func main() {
 	size := 5000
 	duration := time.Duration(5)
 
+	//create a boatload of clients
 	for i := 0; i < size; i++ {
 		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
 		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
@@ -37,30 +38,34 @@ func main() {
 		clients = append(clients, &client)
 	}
 
-	//client_utils.StartREPL(clients[0])
-
+	//TODO use wait groups here instead of sleeping till all clients have started to listen to the server
 	time.Sleep(duration * time.Second)
 
+	//sign up all these clients
 	for i := 0; i < size; i++ {
 		signupRequest := common.NewRequest(common.SIGNUP, clients[i].Username, clients[i].PubKey, []byte(common.NONE))
 		client_utils.SendPlainTextRequest(clients[i].Conn, signupRequest)
 	}
 
+	//TODO use wait groups here instead of sleeping till all clients have made a sign up request
 	time.Sleep(duration * time.Second)
 
+	//select one next username for each user
+	//For example, select user01 as target for user00 and so on
 	for i := 0; i < size; i++ {
-		//clients[((i+1)%size)]
-		//clients[i]
 		selectTargetRequest := common.NewRequest(common.SELECT_TARGET, clients[(i+1)%size].Username, clients[i].PubKey, []byte(common.NONE))
 		client_utils.SendPlainTextRequest(clients[i].Conn, selectTargetRequest)
 	}
 
+	//TODO use wait groups instead of waiting with sleep till target selection is over.
 	time.Sleep(4 * time.Second)
 
+	//make every client send out a message to its target
 	for i := 0; i < size; i++ {
 		client_utils.ParseInput("hello", clients[i])
 	}
 
+	//wait for enter key
 	in := bufio.NewReader(os.Stdin)
 	in.ReadString('\n')
 }
