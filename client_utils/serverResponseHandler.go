@@ -82,5 +82,5 @@ func ListenToServer(client *Client) {
 
 func messageHandler(messageResponse common.Response, client *Client) {
 	message := common.AsymmetricPrivateKeyDecryption(client.PrivKey, messageResponse.Message)
-	color.Yellow(messageResponse.Username + " : " + message)
+	color.Yellow(messageResponse.Username + " to me(" + client.Username + ") : " + message)
 }

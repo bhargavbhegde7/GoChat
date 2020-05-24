@@ -13,12 +13,12 @@ import (
 func main() {
 
 	var clients []*client_utils.Client
-	size := 50
+	size := 5000
 	duration := time.Duration(5)
 
 	for i := 0; i < size; i++ {
-		pubKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
-		privKeyFilePath := "D:/work/gopath/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
+		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
+		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
 
 		client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 

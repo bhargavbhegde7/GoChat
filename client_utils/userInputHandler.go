@@ -52,7 +52,7 @@ func ParseInput(input string, client *Client) {
 	default:
 		// consider this as a message payload
 		if client.Targetpubkey == nil {
-			color.Red("Target client is not set")
+			color.Red("Target client is not set for client with user name " + client.Username)
 			break
 		}
 		request := common.NewRequest(common.CLIENT_MESSAGE, client.Username, client.PubKey, []byte(input))
