@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -16,10 +17,12 @@ func main() {
 	size := 5000
 	duration := time.Duration(5)
 
+	wg := &sync.WaitGroup{}
 	//create a boatload of clients
 	for i := 0; i < size; i++ {
 		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
 		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
+		wg.Add(1)
 
 		client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 
@@ -33,7 +36,10 @@ func main() {
 		client.Conn = conn
 		client.Username = "user0" + strconv.Itoa(i)
 
-		go client_utils.ListenToServer(&client)
+		go func(client *client_utils.Client) {
+			client_utils.ListenToServer(&client)
+			wg.Done()
+		}(client)
 
 		clients = append(clients, &client)
 	}
