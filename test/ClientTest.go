@@ -7,21 +7,19 @@ import (
 	"net"
 	"os"
 	"strconv"
-	"sync"
+	"time"
 )
 
 func main() {
 
 	var clients []*client_utils.Client
-	size := 50
-
-	wg1 := &sync.WaitGroup{}
+	size := 500
+	duration := time.Duration(10)
 
 	//create a boatload of clients
 	for i := 0; i < size; i++ {
 		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/client/pub_key"
 		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/client/priv_key"
-		wg1.Add(1)
 
 		client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
 
@@ -35,65 +33,40 @@ func main() {
 		client.Conn = conn
 		client.Username = "user0" + strconv.Itoa(i)
 
-		go func(client *client_utils.Client) {
-			client_utils.ListenToServer(client)
-			wg1.Done()
-		}(&client)
+		go client_utils.ListenToServer(&client)
 
 		clients = append(clients, &client)
 	}
 
-	wg1.Wait()
+	time.Sleep(duration * time.Second)
 
-	//TODO use wait groups here instead of sleeping till all clients have started to listen to the server
-	//time.Sleep(duration * time.Second)
-
-	wg2 := &sync.WaitGroup{}
 	//sign up all these clients
 	for i := 0; i < size; i++ {
-		wg2.Add(1)
 		signupRequest := common.NewRequest(common.SIGNUP, clients[i].Username, clients[i].PubKey, []byte(common.NONE))
 
-		go func() {
-			client_utils.SendPlainTextRequest(clients[i].Conn, signupRequest)
-			wg2.Done()
-		}()
+		go client_utils.SendPlainTextRequest(clients[i].Conn, signupRequest)
 
 	}
-	wg2.Wait()
 
-	//TODO use wait groups here instead of sleeping till all clients have made a sign up request
-	//time.Sleep(duration * time.Second)
+	time.Sleep(duration * time.Second)
 
-	wg3 := &sync.WaitGroup{}
 	//select one next username for each user
 	//For example, select user01 as target for user00 and so on
 	for i := 0; i < size; i++ {
-		wg3.Add(1)
 		selectTargetRequest := common.NewRequest(common.SELECT_TARGET, clients[(i+1)%size].Username, clients[i].PubKey, []byte(common.NONE))
 
-		go func() {
-			client_utils.SendPlainTextRequest(clients[i].Conn, selectTargetRequest)
-			wg3.Done()
-		}()
+		go client_utils.SendPlainTextRequest(clients[i].Conn, selectTargetRequest)
 
 	}
-	wg3.Wait()
 
-	//TODO use wait groups instead of waiting with sleep till target selection is over.
-	//time.Sleep(duration * time.Second)
+	time.Sleep(duration * time.Second)
 
-	wg4 := &sync.WaitGroup{}
 	//make every client send out a message to its target
 	for i := 0; i < size; i++ {
-		wg4.Add(1)
 
-		go func() {
-			client_utils.ParseInput("hello", clients[i])
-			wg4.Done()
-		}()
+		go client_utils.ParseInput("hello", clients[i])
+
 	}
-	wg4.Wait()
 
 	//wait for enter key
 	in := bufio.NewReader(os.Stdin)
