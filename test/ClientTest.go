@@ -37,9 +37,9 @@ func main() {
 		client.Username = "user0" + strconv.Itoa(i)
 
 		go func(client *client_utils.Client) {
-			client_utils.ListenToServer(&client)
+			client_utils.ListenToServer(client)
 			wg.Done()
-		}(client)
+		}(&client)
 
 		clients = append(clients, &client)
 	}
