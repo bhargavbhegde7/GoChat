@@ -34,10 +34,10 @@ func main() {
 		client.Conn = conn
 		client.Username = "user0" + strconv.Itoa(i)
 
-		go func(client *client_utils.Client) {
-			client_utils.ListenToServer(client)
+		go func() {
+			client_utils.ListenToServer(&client)
 			wg1.Done()
-		}(&client)
+		}()
 
 		clients = append(clients, &client)
 	}
