@@ -13,13 +13,14 @@ import (
 func main() {
 
 	var clients []*client_utils.Client
-	size := 5000
+	size := 50
 
 	wg1 := &sync.WaitGroup{}
+
 	//create a boatload of clients
 	for i := 0; i < size; i++ {
-		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/pub_key"
-		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/server/priv_key"
+		pubKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/client/pub_key"
+		privKeyFilePath := "/home/bhegde/go/src/github.com/bhargavbhegde7/GoChat/client/priv_key"
 		wg1.Add(1)
 
 		client := client_utils.Client{Conn: nil, Targetpubkey: nil, Username: "", ServerPubKey: nil, ServerKey: nil, PubKey: nil, PrivKey: nil}
@@ -34,10 +35,10 @@ func main() {
 		client.Conn = conn
 		client.Username = "user0" + strconv.Itoa(i)
 
-		go func() {
-			client_utils.ListenToServer(&client)
+		go func(client *client_utils.Client) {
+			client_utils.ListenToServer(client)
 			wg1.Done()
-		}()
+		}(&client)
 
 		clients = append(clients, &client)
 	}
